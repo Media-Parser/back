@@ -1,6 +1,7 @@
 # app/core/config.py
 import os
 from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
@@ -10,5 +11,15 @@ class Settings:
     GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
     FRONTEND_URL = os.getenv("FRONTEND_URL")
     SECRET_KEY = os.getenv("SECRET_KEY", "ssami-secret")
+
+    # CORS
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+
+
+
 
 settings = Settings()
