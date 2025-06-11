@@ -15,6 +15,8 @@ def read_root():
 async def documents_upload(file: UploadFile = File(...)):
     if not file.filename.endswith(".hwpx"):
         raise HTTPException(status_code=400, detail="Only .hwpx files are allowed.")
+    
+    
 
     contents = await file.read()
     try:
@@ -22,10 +24,8 @@ async def documents_upload(file: UploadFile = File(...)):
         doc = Doc(
             doc_id=str(uuid.uuid4()),
             user_id="xxx",
-            title="문서 제목",
-            contents=text,
-            created_dt=datetime.now(),
-            updated_dt=datetime.now(),
+            title=file.filename.rsplit(".", 1)[0],
+            contents=text, # file.filename.rsplit(".", 1)[1],
             file_type="hwpx"
         )
         result = create_file(doc)

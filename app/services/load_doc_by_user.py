@@ -17,8 +17,8 @@ class Doc(BaseModel):
     user_id: str = Field(...)
     title: str = Field(..., title="문서 제목", min_length=1)  
     contents: str = Field(..., min_length=1)  
-    created_dt: datetime
-    updated_dt: datetime
+    created_dt: datetime = Field(default=datetime.now())
+    updated_dt: datetime = Field(default=datetime.now())
     file_type: str
     category: Optional[str] = Field(default="/")
     delete_Yn: Optional[str] =  Field(default="n")
@@ -26,12 +26,7 @@ class Doc(BaseModel):
 
 # 파일을 저장하고 문서 정보를 반환하는 함수
 def create_file(file: Doc):
-    file_dict = file.model_dump()  # Pydantic 모델을 dict로 변환 (dict() deprecated)
-    # doc_id, created_dt가 이미 있으면 덮어쓰지 않음
-    if "doc_id" not in file_dict:
-        file_dict["doc_id"] = str(uuid.uuid4())
-    if "created_dt" not in file_dict:
-        file_dict["created_dt"] = datetime.now()
+    file_dict = file.model_dump()  # Pydantic 모델을 dict로 변환 (dict() deprecated) 
 
     result = collection.insert_one(file_dict)
     print("Insert result:", result.inserted_id)  # 로그 추가
