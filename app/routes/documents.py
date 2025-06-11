@@ -1,8 +1,6 @@
-# 📁 app/routes/auth.py
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from app.services.hwpx_extractor import extract_text_from_hwpx
 from app.services.load_doc_by_user import create_file
-from app.services.mongodb import get_mongo_collection
 
 
 router = APIRouter()
