@@ -1,7 +1,9 @@
 # 📁 app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import auth, documents, dashboard
+from app.routes import auth
+from app.routes import documents
+from app.routes import dashboard
 from app.core.config import settings
 
 app = FastAPI()

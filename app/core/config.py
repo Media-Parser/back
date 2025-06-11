@@ -13,13 +13,9 @@ class Settings:
     SECRET_KEY = os.getenv("SECRET_KEY", "ssami-secret")
 
     # CORS
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-
-
-
+    CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*")
+    CORS_ALLOW_CREDENTIALS = os.getenv("CORS_ALLOW_CREDENTIALS", True)
+    CORS_ALLOW_METHODS = os.getenv("CORS_ALLOW_METHODS", ["*"])
+    CORS_ALLOW_HEADERS = os.getenv("CORS_ALLOW_HEADERS", ["*"])
 
 settings = Settings()
