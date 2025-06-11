@@ -1,8 +1,15 @@
-from pydantic import BaseModel
-from typing import List, Optional
+# app/models/document_model.py
+from pydantic import BaseModel, Field
+from typing import Optional
+from datetime import datetime
 
-# 문서 하나를 표현하는 모델 정의
-class Document(BaseModel):
-    id: str                             # 문서의 고유 ID
-    filename: str                       # 파일 이름
-    content: Optional[str] = None      # 파일 내용 (없을 수도 있음)
+class Doc(BaseModel):
+    doc_id: str
+    user_id: str = Field(...)
+    title: str = Field(..., title="문서 제목", min_length=1)  
+    contents: str = Field(..., min_length=1)  
+    created_dt: datetime = Field(default_factory=datetime.now)
+    updated_dt: datetime = Field(default_factory=datetime.now)
+    file_type: str
+    category: Optional[str] = Field(default="/")
+    delete_Yn: Optional[str] =  Field(default="n")

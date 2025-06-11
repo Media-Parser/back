@@ -1,7 +1,11 @@
 # app/models/user.py
-# (임시 - 실제 DB 모델로 확장 가능)
+from pydantic import BaseModel, EmailStr, Field
+from typing import Optional
+from datetime import datetime
 
-class User:
-    def __init__(self, email: str, name: str = ""):
-        self.email = email
-        self.name = name
+class UserInDB(BaseModel):
+    user_id: str
+    user_name: str
+    user_email: EmailStr
+    provider: str
+    create_dt: Optional[datetime] = None
