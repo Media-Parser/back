@@ -11,6 +11,7 @@ class Settings:
     GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
     FRONTEND_URL = os.getenv("FRONTEND_URL")
     SECRET_KEY = os.getenv("SECRET_KEY", "ssami-secret")
+    ATLAS_URI=os.getenv("ATLAS_URI")
 
     # CORS
     CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*")
