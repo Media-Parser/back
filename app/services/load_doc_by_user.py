@@ -34,6 +34,8 @@ def create_file(file: Doc):
         file_dict["created_dt"] = datetime.now()
 
     result = collection.insert_one(file_dict)
+    print("Insert result:", result.inserted_id)  # 로그 추가
+
     if result.inserted_id:
         return {"message": "Doc registered successfully", "doc_id": file_dict["doc_id"]}
     else:
