@@ -26,12 +26,18 @@ class Doc(BaseModel):
 
 # 파일을 저장하고 문서 정보를 반환하는 함수
 def create_file(file: Doc):
+    file_dict = file.model_dump()  # Pydantic 모델을 dict로 변환 (dict() deprecated)
+    # doc_id, created_dt가 이미 있으면 덮어쓰지 않음
+    if "doc_id" not in file_dict:
+        file_dict["doc_id"] = str(uuid.uuid4())
+    if "created_dt" not in file_dict:
+        file_dict["created_dt"] = datetime.now()
 
-    file["doc_id"] = str(uuid.uuid4())  # 랜덤하고 고유한 문서 ID 생성 (예: '2a8d...f3a')
-    file["created_dt"] = datetime.now()
-
-    collection.insert_one(file)
-    return {"message": "Doc registered successfully"}
+    result = collection.insert_one(file_dict)
+    if result.inserted_id:
+        return {"message": "Doc registered successfully", "doc_id": file_dict["doc_id"]}
+    else:
+        return {"message": "Failed to register doc"}
 
 
 # 저장된 모든 문서를 리스트 형태로 반환하는 함수

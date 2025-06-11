@@ -1,6 +1,8 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from app.services.hwpx_extractor import extract_text_from_hwpx
-from app.services.load_doc_by_user import create_file
+from app.services.load_doc_by_user import create_file, Doc
+from datetime import datetime
+import uuid
 
 
 router = APIRouter()
@@ -16,13 +18,17 @@ async def documents_upload(file: UploadFile = File(...)):
 
     contents = await file.read()
     try:
-        text = extract_text_from_hwpx(contents)  # 파일명 인자 제거
-        create_file({
-            "user_id": "xxx",
-            "title": "문서 제목",
-            "contents": text,
-            "file_type": "hwpx"
-        })
-        return {"text": text}
+        text = extract_text_from_hwpx(contents)
+        doc = Doc(
+            doc_id=str(uuid.uuid4()),
+            user_id="xxx",
+            title="문서 제목",
+            contents=text,
+            created_dt=datetime.now(),
+            updated_dt=datetime.now(),
+            file_type="hwpx"
+        )
+        result = create_file(doc)
+        return {"text": text, "db_result": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
