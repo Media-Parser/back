@@ -25,10 +25,10 @@ class Doc(BaseModel):
 
 
 # 파일을 저장하고 문서 정보를 반환하는 함수
-def create_file(file: Doc = UploadFile(...)):
+def create_file(file: Doc):
 
     file["doc_id"] = str(uuid.uuid4())  # 랜덤하고 고유한 문서 ID 생성 (예: '2a8d...f3a')
-    file["created_dt"] = datetime.now
+    file["created_dt"] = datetime.now()
 
     collection.insert_one(file)
     return {"message": "Doc registered successfully"}
