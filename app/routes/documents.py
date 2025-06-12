@@ -2,12 +2,16 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from app.services.hwpx_extractor import extract_text_from_hwpx
 from app.services.document_service import create_file
+from app.services.document_service import get_documents
 from app.models.document_model import Doc
 from datetime import datetime
 import uuid
+from typing import List
+from fastapi import Query
 
 router = APIRouter()
 
+# 문서 업로드 API (hwpx)
 @router.post("/documents/upload/hwpx")
 async def documents_upload(file: UploadFile = File(...)):
     if not file.filename.endswith(".hwpx"):
@@ -27,3 +31,15 @@ async def documents_upload(file: UploadFile = File(...)):
         return {"text": text, "db_result": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+# 문서 조회 API
+@router.get("/documents")
+async def list_documents(user_id: str = Query(...)):
+    try:
+        docs = await get_documents(user_id)
+        if not isinstance(docs, list):
+            return []
+        return docs
+    except Exception as e:
+        print("문서조회 에러:", e)
+        return []
