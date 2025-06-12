@@ -52,4 +52,4 @@ async def get_naver_user_info(code: str, state: str):
         user = await find_or_create_user(user_id, user_name, user_email, provider)
 
     jwt_token = create_jwt_token(user_id)
-    return jwt_token
+    return user, jwt_token
