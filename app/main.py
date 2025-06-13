@@ -1,8 +1,14 @@
 # 📁 app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import auth, documents
+from dotenv import load_dotenv
 from app.core.config import settings
+
+load_dotenv()
+
+from app.routes import auth
+from app.routes import documents
+# from app.routes import dashboard
 
 app = FastAPI()
 
@@ -16,3 +22,4 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(documents.router)
+# app.include_router(dashboard.router)

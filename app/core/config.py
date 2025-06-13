@@ -11,15 +11,12 @@ class Settings:
     GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
     FRONTEND_URL = os.getenv("FRONTEND_URL")
     SECRET_KEY = os.getenv("SECRET_KEY", "ssami-secret")
+    ATLAS_URI=os.getenv("ATLAS_URI")
 
     # CORS
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-
-
-
+    CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*")
+    CORS_ALLOW_CREDENTIALS = os.getenv("CORS_ALLOW_CREDENTIALS", True)
+    CORS_ALLOW_METHODS = os.getenv("CORS_ALLOW_METHODS", ["*"])
+    CORS_ALLOW_HEADERS = os.getenv("CORS_ALLOW_HEADERS", ["*"])
 
 settings = Settings()
