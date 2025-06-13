@@ -1,24 +1,24 @@
-# app/services/hwpx_extractor.py
+# app/services/hwp_extractor.py
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-JAR_PATH = os.path.join(BASE_DIR, "python-hwpxlib-main", "hwpxlib-1.0.5.jar")
-LOADER_PATH = os.path.join(BASE_DIR, "python-hwpxlib-main", "hwpx_loader.py")
+JAR_PATH = os.path.join(BASE_DIR, "python-hwplib-main", "hwplib-1.1.8.jar")
+LOADER_PATH = os.path.join(BASE_DIR, "python-hwplib-main", "hwp_loader.py")
 
 print("LOADER_PATH:", LOADER_PATH)
 print("JAR_PATH:", JAR_PATH)
 
-def extract_text_from_hwpx(file_bytes: bytes) -> str:
+def extract_text_from_hwp(file_bytes: bytes) -> str:
     import tempfile
     import subprocess
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".hwpx") as tmp:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".hwp") as tmp:
         tmp.write(file_bytes)
         tmp_path = tmp.name
 
     try:
         result = subprocess.run(
-            ["python", LOADER_PATH, "--hwpx_jar_path", JAR_PATH, "--file_path", tmp_path],
+            ["python", LOADER_PATH, "--hwp_jar_path", JAR_PATH, "--file_path", tmp_path],
             capture_output=True,
             text=True,
             encoding="utf-8"
