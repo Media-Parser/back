@@ -33,5 +33,11 @@ async def find_user_by_email_provider(user_email, provider):
         return UserInDB(**user)
     return None
 
+async def find_user_by_id(user_id: str):
+    user = await collection.find_one({"user_id": user_id})
+    if user:
+        return UserInDB(**user)
+    return None
+
 def generate_user_id():
     return str(uuid.uuid4())
