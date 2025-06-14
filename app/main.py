@@ -9,6 +9,7 @@ load_dotenv()
 from app.routes import auth
 from app.routes import documents
 from app.routes import trash
+from app.routes import user
 
 app = FastAPI()
 
@@ -23,3 +24,4 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(documents.router)
 app.include_router(trash.router)
+app.include_router(user.router)
