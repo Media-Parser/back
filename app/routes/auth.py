@@ -1,19 +1,10 @@
 # 📁 app/routes/auth.py
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, Request
 from fastapi.responses import RedirectResponse
-from app.services import oauth_google, oauth_kakao, oauth_naver, user_service
-from app.models.user import UserInDB
+from app.services import oauth_google, oauth_kakao, oauth_naver
 import os
 
 router = APIRouter()
-
-# 사용자 정보 조회 API
-@router.get("/auth/{user_id}", response_model=UserInDB)
-async def get_user_info(user_id: str):
-    user = await user_service.find_user_by_id(user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
 
 # Google OAuth 인증
 @router.get("/auth/google")
