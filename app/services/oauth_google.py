@@ -4,7 +4,7 @@ import requests
 from urllib.parse import urlencode
 from fastapi import HTTPException
 from app.core.security import create_jwt_token
-from app.services.user_service import find_user_by_email_provider, find_or_create_user, generate_user_id
+from app.services.user_service import find_user_by_email_provider, find_or_create_user
 
 GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
@@ -52,8 +52,8 @@ async def get_google_user_info(code: str):
     if user:
         user_id = user.user_id
     else:
-        user_id = generate_user_id()
-        user = await find_or_create_user(user_id, user_name, user_email, provider)
+        user = await find_or_create_user(user_name, user_email, provider)
+        user_id = user.user_id
 
     jwt_token = create_jwt_token(user_id)
     return user, jwt_token

@@ -10,6 +10,7 @@ from app.routes import auth
 from app.routes import documents
 from app.routes import trash
 from app.routes import user
+from app.routes import category
 
 app = FastAPI()
 
@@ -25,3 +26,4 @@ app.include_router(auth.router)
 app.include_router(documents.router)
 app.include_router(trash.router)
 app.include_router(user.router)
+app.include_router(category.router)

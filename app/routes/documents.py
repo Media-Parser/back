@@ -2,22 +2,26 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form,Response
 from app.services.hwpx_extractor import extract_text_from_hwpx
 from app.services.hwp_extractor import extract_text_from_hwp
-from app.services.document_service import upload_file
+from app.services.document_service import upload_file, get_next_doc_id
 from app.services.document_service import get_documents
 from app.services.document_service import download_file
 from app.services.document_service import delete_file
 from app.models.document_model import Doc
-import uuid
 from fastapi import Query
 import traceback
 from fastapi import Response
 from urllib.parse import quote
+from typing import Optional
 
 router = APIRouter()
 
 # 문서 업로드 API (hwpx)
 @router.post("/documents/upload/hwpx")
-async def documents_upload(file: UploadFile = File(...), user_id: str = Form(...)):
+async def documents_upload(
+    file: UploadFile = File(...),
+    user_id: str = Form(...),
+    category_id: Optional[str] = Form(None)
+):
     if not file.filename.endswith(".hwpx"):
         raise HTTPException(status_code=400, detail="Only .hwpx files are allowed.")
 
@@ -25,11 +29,12 @@ async def documents_upload(file: UploadFile = File(...), user_id: str = Form(...
     try:
         text = extract_text_from_hwpx(contents)
         doc = Doc(
-            doc_id=str(uuid.uuid4()),
-            user_id=user_id,
-            title=file.filename.rsplit(".", 1)[0],
-            contents=text,
-            file_type="hwpx"
+        doc_id=await get_next_doc_id(),
+        user_id=user_id,
+        title=file.filename.rsplit(".", 1)[0],
+        contents=text,
+        file_type="hwpx",
+        category_id=category_id or ""
         )
         result = await upload_file(doc)
         return {"text": text, "db_result": result}
@@ -40,7 +45,11 @@ async def documents_upload(file: UploadFile = File(...), user_id: str = Form(...
 
 # 문서 업로드 API (hwp)
 @router.post("/documents/upload/hwp")
-async def documents_upload(file: UploadFile = File(...), user_id: str = Form(...)):
+async def documents_upload(
+    file: UploadFile = File(...),
+    user_id: str = Form(...),
+    category_id: Optional[str] = Form(None)
+):
     if not file.filename.endswith(".hwp"):
         raise HTTPException(status_code=400, detail="Only .hwp files are allowed.")
 
@@ -48,11 +57,12 @@ async def documents_upload(file: UploadFile = File(...), user_id: str = Form(...
     try:
         text = extract_text_from_hwp(contents)
         doc = Doc(
-            doc_id=str(uuid.uuid4()),
-            user_id=user_id,
-            title=file.filename.rsplit(".", 1)[0],
-            contents=text,
-            file_type="hwp"
+        doc_id=await get_next_doc_id(),
+        user_id=user_id,
+        title=file.filename.rsplit(".", 1)[0],
+        contents=text,
+        file_type="hwp",
+        category_id=category_id or ""
         )
         result = await upload_file(doc)
         return {"text": text, "db_result": result}

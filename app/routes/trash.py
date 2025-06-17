@@ -8,9 +8,20 @@ from app.services.document_service import (
     delete_all_deleted_documents
 )
 from fastapi import Query
+import traceback
 
 router = APIRouter(prefix="/trash", tags=["Trash"])
 
+# 4. 휴지통 문서 전체 삭제
+@router.delete("/all")
+async def delete_all_trash_documents():
+    try:
+        deleted_count = await delete_all_deleted_documents()
+        return JSONResponse(content={"success": True, "message": f"{deleted_count} documents permanently deleted"})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 # 1. 휴지통 문서 목록 조회
 @router.get("/")
 async def get_trash_documents(user_id: str = Query(...)):
@@ -33,7 +44,18 @@ async def restore_trash_document(document_id: str):
         print("휴지통 문서 복원 에러:", e)
         raise HTTPException(status_code=500, detail=str(e))
 
-# 3. 휴지통 문서 개별 삭제
+# 3. 휴지통 문서 전체 삭제
+@router.delete("/all")
+async def delete_all_trash_documents():
+    try:
+        deleted_count = await delete_all_deleted_documents()
+        return JSONResponse(content={"success": True, "message": f"{deleted_count} documents permanently deleted"})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+# 4. 휴지통 문서 개별 삭제
 @router.delete("/{document_id}")
 async def delete_trash_document(document_id: str):
     try:
@@ -43,14 +65,4 @@ async def delete_trash_document(document_id: str):
         return JSONResponse(content={"success": True, "message": "Document permanently deleted"})
     except Exception as e:
         print("휴지통 문서 개별 삭제 에러:", e)
-        raise HTTPException(status_code=500, detail=str(e))
-
-# 4. 휴지통 문서 전체 삭제
-@router.delete("/all")    
-async def delete_all_trash_documents():
-    try:
-        deleted_count = await delete_all_deleted_documents()
-        return JSONResponse(content={"success": True, "message": f"{deleted_count} documents permanently deleted"})
-    except Exception as e:
-        print("휴지통 문서 전체 삭제 에러:", e)
         raise HTTPException(status_code=500, detail=str(e))
