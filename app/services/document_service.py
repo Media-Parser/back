@@ -13,6 +13,7 @@ client = AsyncIOMotorClient(ATLAS_URI)
 
 db = client['uploadedbyusers']
 collection = db['docs']
+temp_collection = db['temp_docs']
 
 def serialize_doc(doc):
     return {
@@ -67,10 +68,14 @@ async def get_documents(user_id: str, category_id: Optional[str] = None):
     docs = await collection.find(query).to_list(length=None)
     return [serialize_doc(doc) for doc in docs]
 
+
 # 문서 업로드
 async def upload_file(file: Doc):
     file_dict = file.model_dump()
     result = await collection.insert_one(file_dict)
+    # temp_collection에도 insert
+    await temp_collection.insert_one(file_dict)
+
     if result.inserted_id:
         return {"message": "Doc registered successfully", "doc_id": file_dict["doc_id"]}
     else:
@@ -138,5 +143,25 @@ async def delete_all_deleted_documents() -> int:
         traceback.print_exc()  # 추가
         raise  # FastAPI에 에러 전달
 
+# 문서편집-AI: doc_id로 TEMP_COLLECTION 에서 문서 조회
+async def get_one_temp_doc(doc_id: str):
+    doc = await temp_collection.find_one({"doc_id": doc_id, "delete_Yn": {"$ne": "y"}})
+    if doc:
+        doc = convert_mongo_document(doc)
+    return doc
 
-
+# 문서 임시 수정
+async def update_temp_doc(doc_id: str, update_data: dict):
+    try:
+        # _id로 찾기 (ObjectId 사용)
+        result = await temp_collection.update_one(
+            {"doc_id": doc_id, "delete_Yn": {"$ne": "y"}},
+            {"$set": update_data}
+        )
+        if result.modified_count > 0:
+            return {"message": "Document updated successfully"}
+        else:
+            return {"message": "No document updated"}
+    except Exception as e:
+        print("update_document error:", e)
+        return {"message": "Failed to update document"}

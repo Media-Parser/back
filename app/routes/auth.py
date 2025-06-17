@@ -4,15 +4,15 @@ from fastapi.responses import RedirectResponse
 from app.services import oauth_google, oauth_kakao, oauth_naver
 import os
 
-router = APIRouter()
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
 # Google OAuth 인증
-@router.get("/auth/google")
+@router.get("/google")
 def auth_google():
     return RedirectResponse(oauth_google.get_google_auth_url())
 
 # Google OAuth Callback
-@router.get("/auth/google/callback")
+@router.get("/google/callback")
 async def auth_google_callback(request: Request):
     code = request.query_params.get("code")
     user, token = await oauth_google.get_google_user_info(code) 
@@ -21,12 +21,12 @@ async def auth_google_callback(request: Request):
     return RedirectResponse(f"{frontend_url}/oauth/callback?token={token}&user_id={user.user_id}")
 
 # Kakao OAuth 인증
-@router.get("/auth/kakao")
+@router.get("/kakao")
 def auth_kakao():
     return RedirectResponse(oauth_kakao.get_kakao_auth_url())
 
 # Kakao OAuth Callback
-@router.get("/auth/kakao/callback")
+@router.get("/kakao/callback")
 async def auth_kakao_callback(request: Request):
     code = request.query_params.get("code")
     user, token = await oauth_kakao.get_kakao_user_info(code)
@@ -34,12 +34,12 @@ async def auth_kakao_callback(request: Request):
     return RedirectResponse(f"{frontend_url}/oauth/callback?token={token}&user_id={user.user_id}")
 
 # Naver OAuth 인증
-@router.get("/auth/naver")
+@router.get("/naver")
 def auth_naver():
     return RedirectResponse(oauth_naver.get_naver_auth_url())
 
 # Naver OAuth Callback
-@router.get("/auth/naver/callback")
+@router.get("/naver/callback")
 async def auth_naver_callback(request: Request):
     code = request.query_params.get("code")
     state = request.query_params.get("state")

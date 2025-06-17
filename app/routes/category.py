@@ -7,15 +7,15 @@ from app.services.category_service import (
     update_category
 )
 
-router = APIRouter()
+router = APIRouter(prefix="/categories", tags=["Categories"])
 
 # 카테고리 목록 조회
-@router.get("/categories")
+@router.get("/")
 async def fetch_categories(user_id: str):
     return await get_categories(user_id)
 
 # 카테고리 추가
-@router.post("/categories")
+@router.post("/")
 async def create_category(data: dict):
     user_id = data.get("user_id")
     label = data.get("label")
@@ -24,7 +24,7 @@ async def create_category(data: dict):
     return await add_category(user_id, label)
 
 # 카테고리 삭제
-@router.delete("/categories/{category_id}")
+@router.delete("/{category_id}")
 async def remove_category(category_id: str):
     deleted = await delete_category(category_id)
     if not deleted:
@@ -32,7 +32,7 @@ async def remove_category(category_id: str):
     return {"success": True}
 
 # 카테고리 수정
-@router.put("/categories/{category_id}")
+@router.put("/{category_id}")
 async def edit_category(category_id: str, data: dict):
     label = data.get("label")
     if not label:

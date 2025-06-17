@@ -4,9 +4,9 @@ from app.services import user_service
 from app.models.user_model import UserInDB
 from bson import ObjectId, errors as bson_errors
 
-router = APIRouter()
+router = APIRouter(prefix="/users", tags=["Users"])
 
-@router.get("/users/{user_id}", response_model=UserInDB)
+@router.get("/{user_id}", response_model=UserInDB)
 async def get_user_info(user_id: str):
     if not user_id.startswith("user_"):
         raise HTTPException(status_code=400, detail="Invalid user_id format")
