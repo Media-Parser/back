@@ -3,3 +3,7 @@ uvicorn
 python-dotenv
 requests
 PyJWT
+jwt
+python-multipart
+motor
+"pydantic[email]"
