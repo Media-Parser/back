@@ -1,10 +1,11 @@
 # app/routes/category.py
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Body
 from app.services.category_service import (
     get_categories,
     add_category,
     delete_category,
-    update_category
+    update_category,
+    move_document
 )
 
 router = APIRouter(prefix="/categories", tags=["Categories"])
@@ -41,3 +42,10 @@ async def edit_category(category_id: str, data: dict):
     if not updated_category:
         raise HTTPException(status_code=404, detail="수정 대상 없음")
     return updated_category # 업데이트된 카테고리 객체 반환
+
+# 카테고리 이동
+@router.post("/move/{doc_id}")
+async def move_document_route(doc_id: str, body: dict = Body(...)):
+    category_id = body.get("category_id", "")
+    await move_document(doc_id, category_id)
+    return {"success": True}

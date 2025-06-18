@@ -11,6 +11,7 @@ client = AsyncIOMotorClient(MONGO_URI)
 db = client["uploadedbyusers"]
 collection = db["categories"]
 
+# 카테고리 ID 생성
 async def get_next_category_id():
     latest_category = await collection.find_one(
         {"category_id": {"$regex": "^category_\\d{8}$"}},
@@ -28,10 +29,11 @@ async def get_next_category_id():
 
     return f"category_{next_number:08d}"
 
+# 카테고리 path 생성
 def create_path(label: str) -> str:
     return f"/dashboard/{label.lower()}"
 
-
+# 카테고리 조회
 async def get_categories(user_id: str):
     docs = await collection.find({"user_id": user_id}).to_list(length=None)
     return [
@@ -66,6 +68,7 @@ async def add_category(user_id: str, label: str, path: Optional[str] = None):
         "created_dt": doc["created_dt"],
     }
 
+# 카테고리 삭제
 async def delete_category(category_id: str):
     result = await collection.delete_one({"category_id": category_id})
     doc_collection = db["docs"]
@@ -76,6 +79,7 @@ async def delete_category(category_id: str):
     )
     return result.deleted_count
 
+# 카테고리 수정
 async def update_category(category_id: str, label: str):
     path = create_path(label) # path 생성 로직은 동일
     updated_doc = await collection.find_one_and_update( # find_one_and_update 사용
@@ -99,3 +103,14 @@ async def update_category(category_id: str, label: str):
             "updated_dt": updated_doc.get("updated_dt")
         }
     return None # 업데이트 실패 시 None 반환
+
+# 카테고리 이동
+async def move_document(doc_id: str, category_id: str):
+    doc_collection = db["docs"]
+    await doc_collection.update_one(
+        {"doc_id": doc_id},
+        {"$set": {
+            "category_id": category_id,
+            "updated_dt": datetime.now()
+        }}
+    )
