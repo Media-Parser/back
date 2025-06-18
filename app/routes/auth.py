@@ -4,13 +4,15 @@ from fastapi.responses import RedirectResponse
 from app.services import oauth_google, oauth_kakao, oauth_naver
 import os
 
-router = APIRouter()
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
-@router.get("/auth/google")
+# Google OAuth 인증
+@router.get("/google")
 def auth_google():
     return RedirectResponse(oauth_google.get_google_auth_url())
 
-@router.get("/auth/google/callback")
+# Google OAuth Callback
+@router.get("/google/callback")
 async def auth_google_callback(request: Request):
     code = request.query_params.get("code")
     user, token = await oauth_google.get_google_user_info(code) 
@@ -18,22 +20,26 @@ async def auth_google_callback(request: Request):
     # 로그인 성공 후 user_id, token을 쿼리 파라미터로 프론트에 리다이렉트
     return RedirectResponse(f"{frontend_url}/oauth/callback?token={token}&user_id={user.user_id}")
 
-@router.get("/auth/kakao")
+# Kakao OAuth 인증
+@router.get("/kakao")
 def auth_kakao():
     return RedirectResponse(oauth_kakao.get_kakao_auth_url())
 
-@router.get("/auth/kakao/callback")
+# Kakao OAuth Callback
+@router.get("/kakao/callback")
 async def auth_kakao_callback(request: Request):
     code = request.query_params.get("code")
     user, token = await oauth_kakao.get_kakao_user_info(code)
     frontend_url = os.getenv("FRONTEND_URL")
     return RedirectResponse(f"{frontend_url}/oauth/callback?token={token}&user_id={user.user_id}")
 
-@router.get("/auth/naver")
+# Naver OAuth 인증
+@router.get("/naver")
 def auth_naver():
     return RedirectResponse(oauth_naver.get_naver_auth_url())
 
-@router.get("/auth/naver/callback")
+# Naver OAuth Callback
+@router.get("/naver/callback")
 async def auth_naver_callback(request: Request):
     code = request.query_params.get("code")
     state = request.query_params.get("state")
