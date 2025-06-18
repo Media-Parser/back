@@ -14,9 +14,13 @@ class Settings:
     ATLAS_URI=os.getenv("ATLAS_URI")
 
     # CORS
-    CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*")
-    CORS_ALLOW_CREDENTIALS = os.getenv("CORS_ALLOW_CREDENTIALS", True)
-    CORS_ALLOW_METHODS = os.getenv("CORS_ALLOW_METHODS", ["*"])
-    CORS_ALLOW_HEADERS = os.getenv("CORS_ALLOW_HEADERS", ["*"])
+    # CORS_ORIGINS = os.getenv("CORS_ORIGINS")
+    # CORS_ALLOW_CREDENTIALS = os.getenv("CORS_ALLOW_CREDENTIALS")
+    # CORS_ALLOW_METHODS = os.getenv("CORS_ALLOW_METHODS")
+    # CORS_ALLOW_HEADERS = os.getenv("CORS_ALLOW_HEADERS")
+    CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
+    CORS_ALLOW_CREDENTIALS = os.getenv("CORS_ALLOW_CREDENTIALS", "true").lower() == "true"
+    CORS_ALLOW_METHODS = os.getenv("CORS_ALLOW_METHODS", "*").split(",")
+    CORS_ALLOW_HEADERS = os.getenv("CORS_ALLOW_HEADERS", "*").split(",")
 
 settings = Settings()
