@@ -74,7 +74,7 @@ async def upload_file(file: Doc):
     file_dict = file.model_dump()
     result = await collection.insert_one(file_dict)
     # temp_collection에도 insert
-    await temp_collection.insert_one(file_dict)
+    # await temp_collection.insert_one(file_dict)
 
     if result.inserted_id:
         return {"message": "Doc registered successfully", "doc_id": file_dict["doc_id"]}
@@ -145,7 +145,7 @@ async def delete_all_deleted_documents() -> int:
 
 # 문서편집-AI: doc_id로 TEMP_COLLECTION 에서 문서 조회
 async def get_one_temp_doc(doc_id: str):
-    doc = await temp_collection.find_one({"doc_id": doc_id, "delete_Yn": {"$ne": "y"}})
+    doc = await temp_collection.find_one({"doc_id": doc_id, "delete_yn": {"$ne": "y"}})
     if doc:
         doc = convert_mongo_document(doc)
     return doc
@@ -155,7 +155,7 @@ async def update_temp_doc(doc_id: str, update_data: dict):
     try:
         # _id로 찾기 (ObjectId 사용)
         result = await temp_collection.update_one(
-            {"doc_id": doc_id, "delete_Yn": {"$ne": "y"}},
+            {"doc_id": doc_id, "delete_yn": {"$ne": "y"}},
             {"$set": update_data}
         )
         if result.modified_count > 0:
@@ -165,3 +165,40 @@ async def update_temp_doc(doc_id: str, update_data: dict):
     except Exception as e:
         print("update_document error:", e)
         return {"message": "Failed to update document"}
+
+async def get_or_create_temp_doc(doc_id: str):
+    # temp_docs에 해당 doc_id 문서가 있는지 먼저 조회
+    temp_doc = await temp_collection.find_one({"doc_id": doc_id})
+    if temp_doc:
+        temp_doc = convert_mongo_document(temp_doc)
+        return temp_doc
+    
+    # 없으면 docs에서 가져와서 temp_docs에 insert
+    doc = await collection.find_one({"doc_id": doc_id})
+    if not doc:
+        return None
+    # 필요 없는 _id 제거
+    doc.pop("_id", None)
+    # 필요한 필드만 남기기 (ex: status 기본값도 넣을 수 있음)
+    temp_doc_data = {
+        "doc_id": doc.get("doc_id"),
+        "title": doc.get("title"),
+        "contents": doc.get("contents"),
+        "created_dt": doc.get("created_dt"),
+        "updated_dt": doc.get("updated_dt"),
+        "file_type": doc.get("file_type"),
+    }
+    await temp_collection.insert_one(temp_doc_data)
+    # 방금 insert한 데이터 반환
+    return convert_mongo_document(temp_doc_data)
+
+# 문서 삭제
+async def delete_file(document_id: str):
+    # 1. docs에서 논리 삭제
+    result = await collection.update_one(
+        {"doc_id": document_id},
+        {"$set": {"delete_yn": "y"}}
+    )
+    # 2. temp_docs에서도 삭제(물리 삭제)
+    await temp_collection.delete_one({"doc_id": document_id})
+    return result.modified_count > 0
