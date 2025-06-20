@@ -8,7 +8,7 @@ from app.services.document_service import download_file
 from app.services.document_service import delete_file
 from app.models.document_model import Doc
 from fastapi import Query
-from app.services.document_service import get_one_temp_doc, update_temp_doc
+from app.services.document_service import get_one_temp_doc, update_temp_doc, get_or_create_temp_doc
 import traceback
 from urllib.parse import quote
 from typing import Optional
@@ -123,17 +123,28 @@ async def delete_document(doc_id: str):
         print("문서삭제 에러:", e)
         raise HTTPException(status_code=500, detail=str(e))
 
-# 문서편집-AI: GET temp 문서 
 @router.get("/{documentId}")
 async def get_temp_document(documentId: str):
     try:
-        doc = await get_one_temp_doc(documentId)
+        doc = await get_or_create_temp_doc(documentId)  # ← 기존 get_one_temp_doc → get_or_create_temp_doc
         if not doc:
             raise HTTPException(status_code=404, detail="Document not found")
         return doc
     except Exception as e:
         print("임시문서 조회 에러:", e)
         raise HTTPException(status_code=500, detail=str(e))
+
+# # 문서편집-AI: GET temp 문서 
+# @router.get("/{documentId}")
+# async def get_temp_document(documentId: str):
+#     try:
+#         doc = await get_one_temp_doc(documentId)
+#         if not doc:
+#             raise HTTPException(status_code=404, detail="Document not found")
+#         return doc
+#     except Exception as e:
+#         print("임시문서 조회 에러:", e)
+#         raise HTTPException(status_code=500, detail=str(e))
     
 
 # 문서 임시저장: temp 문서 수정
