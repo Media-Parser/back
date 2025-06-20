@@ -2,10 +2,11 @@
 from fastapi import APIRouter, HTTPException
 from app.services import user_service
 from app.models.user_model import UserInDB
-from bson import ObjectId, errors as bson_errors
+from app.services.user_service import delete_user_and_related
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
+# 사용자 조회
 @router.get("/{user_id}", response_model=UserInDB)
 async def get_user_info(user_id: str):
     if not user_id.startswith("user_"):
@@ -15,4 +16,14 @@ async def get_user_info(user_id: str):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+# 사용자 및 관련 데이터 삭제
+@router.delete("/{user_id}")
+async def delete_user(user_id: str):
+    try:
+        result = await delete_user_and_related(user_id)
+        return result
+    except Exception as e:
+        print("유저 삭제 에러:", e)
+        raise HTTPException(status_code=500, detail="사용자 삭제 중 오류 발생")
 
