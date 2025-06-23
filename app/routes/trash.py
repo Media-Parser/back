@@ -1,7 +1,7 @@
 # 📁 app/routes/trash.py
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
-from app.services.document_service import (
+from app.services.trash_service import (
     get_deleted_documents,
     restore_document,
     delete_document_permanently,
