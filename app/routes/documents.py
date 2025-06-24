@@ -10,12 +10,16 @@ from app.models.temp_model import TempDoc
 from typing import List, Optional
 import traceback
 from urllib.parse import quote
+import magic
+import tempfile
+import os
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
 
 # ======================== 대시보드 ========================
+
 # 문서 목록 조회 API
-@router.get("/", response_model=List[Doc])
+@router.get("/")    # ★ response_model=List[Doc] 제거
 async def list_documents(user_id: str = Query(...)):
     try:
         docs = await get_documents(user_id)
@@ -38,7 +42,7 @@ async def update_document_title_api(
     ok = await update_document_title(doc_id, new_title.strip())
     if not ok:
         raise HTTPException(status_code=404, detail="문서를 찾을 수 없거나 수정되지 않았습니다.")
-    return {"message": "Document title updated successfully"}    
+    return {"message": "Document title updated successfully"}
 
 # 문서 다운로드 API
 @router.get("/download/{doc_id}")
@@ -61,7 +65,7 @@ async def download_document(doc_id: str):
             "Content-Disposition": f"attachment; filename*=UTF-8''{quoted_filename}"
         }
         return Response(
-            content=doc["contents"],
+            content=doc.get("file_blob") or doc.get("contents"),
             media_type="application/octet-stream",
             headers=headers
         )
@@ -86,29 +90,29 @@ async def documents_upload_hwpx(
     user_id: str = Form(...),
     category_id: Optional[str] = Form(None)
 ):
-    if not file.filename.endswith(".hwpx"):
+    if not file.filename.lower().endswith('.hwpx'):
         raise HTTPException(status_code=400, detail="Only .hwpx files are allowed.")
-
     contents = await file.read()
+    parse_error_msg = None
+    text = ""
     try:
         text = extract_text_from_hwpx(contents)
-        doc = Doc(
-            doc_id=await get_next_doc_id(),
-            user_id=user_id,
-            title=file.filename.rsplit(".", 1)[0],
-            contents=text,
-            file_type="hwpx",
-            category_id=category_id or ""
-        )
-        result = await upload_file(doc)
-        doc_id = result.get("doc_id")
-        if not doc_id:
-            raise HTTPException(status_code=500, detail="문서 ID 생성 실패")
-        return {"doc_id": doc_id}
+        print("본문 추출 결과:", text)
     except Exception as e:
-        print("업로드 실패:", e)
-        traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+        parse_error_msg = "본문 추출 실패: " + str(e)
+        text = ""
+    doc = Doc(
+        doc_id=await get_next_doc_id(),
+        user_id=user_id,
+        title=file.filename.rsplit(".", 1)[0],
+        contents=text,
+        file_type="hwpx",
+        file_blob=contents,
+        category_id=category_id or ""
+    )
+    result = await upload_file(doc)
+    doc_id = result.get("doc_id")
+    return {"doc_id": doc_id, "parse_error": parse_error_msg}
 
 # 문서 업로드 API (hwp)
 @router.post("/upload/hwp")
@@ -117,29 +121,30 @@ async def documents_upload_hwp(
     user_id: str = Form(...),
     category_id: Optional[str] = Form(None)
 ):
-    if not file.filename.endswith(".hwp"):
+    if not file.filename.lower().endswith('.hwp'):
         raise HTTPException(status_code=400, detail="Only .hwp files are allowed.")
-
     contents = await file.read()
+    parse_error_msg = None
+    text = ""
     try:
+        # 여기서 임시파일 만들지 말고 바로 넘김!
         text = extract_text_from_hwp(contents)
-        doc = Doc(
-            doc_id=await get_next_doc_id(),
-            user_id=user_id,
-            title=file.filename.rsplit(".", 1)[0],
-            contents=text,
-            file_type="hwp",
-            category_id=category_id or ""
-        )
-        result = await upload_file(doc)
-        doc_id = result.get("doc_id")
-        if not doc_id:
-            raise HTTPException(status_code=500, detail="문서 ID 생성 실패")
-        return {"doc_id": doc_id}
+        print("본문 추출 결과:", text)
     except Exception as e:
-        print("업로드 실패:", e)
-        traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+        parse_error_msg = "본문 추출 실패: " + str(e)
+        text = ""
+    doc = Doc(
+        doc_id=await get_next_doc_id(),
+        user_id=user_id,
+        title=file.filename.rsplit(".", 1)[0],
+        contents=text,
+        file_type="hwp",
+        file_blob=contents,
+        category_id=category_id or ""
+    )
+    result = await upload_file(doc)
+    doc_id = result.get("doc_id")
+    return {"doc_id": doc_id, "parse_error": parse_error_msg}
 
 # ======================== 챗봇 ========================
 
@@ -150,7 +155,7 @@ async def check_temp_doc_exists(doc_id: str):
     return {"exists": exists}
 
 # temp_docs 임시저장본 조회 (존재 시에만)
-@router.get("/temp/{doc_id}", response_model=TempDoc)
+@router.get("/temp/{doc_id}")
 async def get_temp_doc_route(doc_id: str):
     doc = await get_temp_doc(doc_id)
     if not doc:
@@ -158,12 +163,30 @@ async def get_temp_doc_route(doc_id: str):
     return doc
 
 # docs 문서 조회
-@router.get("/{doc_id}", response_model=Doc)
+@router.get("/{doc_id}")
 async def get_doc_route(doc_id: str):
     doc = await get_doc(doc_id)
     if not doc:
         raise HTTPException(404, "문서가 없습니다")
-    return doc
+    # contents가 str이면 포함, 아니면 제외
+    contents = doc.get("contents")
+    if isinstance(contents, bytes):
+        try:
+            contents = contents.decode('utf-8')
+        except Exception:
+            contents = ""
+    return {
+        "doc_id": doc["doc_id"],
+        "user_id": doc["user_id"],
+        "title": doc["title"],
+        "contents": contents,
+        "file_type": doc.get("file_type"),
+        "category_id": doc.get("category_id"),
+        "created_dt": doc.get("created_dt"),
+        "updated_dt": doc.get("updated_dt"),
+        "delete_yn": doc.get("delete_yn"),
+        # "file_blob": None  # 절대 포함 X
+    }
 
 # 임시저장(처음이면 insert, 있으면 patch)
 @router.patch("/temp/{doc_id}")

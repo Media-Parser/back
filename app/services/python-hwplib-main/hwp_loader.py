@@ -1,3 +1,4 @@
+# services/python-hwplib-main/hwp_loader.py
 import jpype
 import argparse
 import sys
@@ -6,43 +7,43 @@ import io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
-def hwp_extract(hwp_jar_path, file_path):
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Hwp loader')
+    parser.add_argument('--hwp_jar_path', type=str, required=True, help='hwplib jar 위치')
+    parser.add_argument('--file_path', type=str, required=True, help='hwp 파일 경로')
+    parser.add_argument('--output', type=str, required=True, help='본문을 저장할 텍스트파일 경로')
+    args = parser.parse_args()
 
-    ## jpype 시작
     jpype.startJVM(
         jpype.getDefaultJVMPath(),
-        "-Djava.class.path={classpath}".format(classpath=hwp_jar_path),
+        "-Djava.class.path={classpath}".format(classpath=args.hwp_jar_path),
         convertStrings=True,
-        )
-
-    ## java package 가져오기
+    )
 
     HWPReader_class = jpype.JPackage('kr.dogfoot.hwplib.reader')
-    HWPFile_class = jpype.JPackage('kr.dogfoot.hwplib.object')
     TextExtrac_class = jpype.JPackage('kr.dogfoot.hwplib.tool.textextractor')
     HWPReader_ = HWPReader_class.HWPReader
-    HWPFile_ = HWPFile_class.HWPFile
     TextExtractMethod_ = TextExtrac_class.TextExtractMethod
     TextExtractor_ = TextExtrac_class.TextExtractor
 
-    # 한글 파일 읽기
-    parser = HWPReader_.fromFile(file_path)
+    # java.io.File 이용
+    javaio = jpype.JPackage('java').io
+    file_obj = javaio.File(args.file_path)
+    parser_obj = HWPReader_.fromFile(file_obj)
 
-    # 한글 추출
-    hwpText = TextExtractor_.extract(parser, TextExtractMethod_.InsertControlTextBetweenParagraphText)
+    extract_methods = [
+        TextExtractMethod_.InsertControlTextBetweenParagraphText,
+        TextExtractMethod_.AppendControlTextAfterParagraphText,
+    ]
 
-    return hwpText
+    best_result = ""
+    for method in extract_methods:
+        hwpText = TextExtractor_.extract(parser_obj, method)
+        if hwpText.strip():
+            best_result = hwpText
+            break
 
+    jpype.shutdownJVM()
 
-if __name__=="__main__":
-    
-    # 파라미터 파싱    
-    parser = argparse.ArgumentParser(description='Hwp loader')
-    parser.add_argument('--hwp_jar_path', type=str, default='./hwplib-1.1.6.jar', help='hwplib jar 위치')
-    parser.add_argument('--file_path', type=str, default='./test.hwp', help='hwp 파일 경로')
-    args = parser.parse_args()
-
-    hwp_text = hwp_extract(args.hwp_jar_path, args.file_path)
-    
-    # print로 표준출력
-    print(hwp_text)
+    with open(args.output, "w", encoding="utf-8") as f:
+        f.write(best_result)
