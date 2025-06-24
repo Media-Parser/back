@@ -1,22 +1,21 @@
-# app/routes/documents.py
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form, Response, Query, Body
 from app.services.hwpx_extractor import extract_text_from_hwpx
 from app.services.hwp_extractor import extract_text_from_hwp
 from app.services.document_service import (
     upload_file, get_next_doc_id, get_documents, download_file, delete_file,
-    update_document_title, has_temp_doc,get_temp_doc, get_doc,update_temp_doc,finalize_temp_doc
+    update_document_title, has_temp_doc, get_temp_doc, get_doc, update_temp_doc, finalize_temp_doc
 )
 from app.models.document_model import Doc
-from typing import Optional
+from app.models.temp_model import TempDoc
+from typing import List, Optional
 import traceback
 from urllib.parse import quote
-
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
 
 # ======================== 대시보드 ========================
-# 문서 조회 API
-@router.get("/")
+# 문서 목록 조회 API
+@router.get("/", response_model=List[Doc])
 async def list_documents(user_id: str = Query(...)):
     try:
         docs = await get_documents(user_id)
@@ -51,7 +50,7 @@ async def download_document(doc_id: str):
 
         title = doc.get('title', 'document')
         ext = doc.get('file_type', '')
-        
+
         print("title:", title)
         print("ext:", ext)
 
@@ -82,12 +81,11 @@ async def delete_document(doc_id: str):
 
 # 문서 업로드 API (hwpx)
 @router.post("/upload/hwpx")
-async def documents_upload(
+async def documents_upload_hwpx(
     file: UploadFile = File(...),
     user_id: str = Form(...),
     category_id: Optional[str] = Form(None)
 ):
-
     if not file.filename.endswith(".hwpx"):
         raise HTTPException(status_code=400, detail="Only .hwpx files are allowed.")
 
@@ -95,12 +93,12 @@ async def documents_upload(
     try:
         text = extract_text_from_hwpx(contents)
         doc = Doc(
-        doc_id=await get_next_doc_id(),
-        user_id=user_id,
-        title=file.filename.rsplit(".", 1)[0],
-        contents=text,
-        file_type="hwpx",
-        category_id=category_id or ""
+            doc_id=await get_next_doc_id(),
+            user_id=user_id,
+            title=file.filename.rsplit(".", 1)[0],
+            contents=text,
+            file_type="hwpx",
+            category_id=category_id or ""
         )
         result = await upload_file(doc)
         doc_id = result.get("doc_id")
@@ -108,13 +106,13 @@ async def documents_upload(
             raise HTTPException(status_code=500, detail="문서 ID 생성 실패")
         return {"doc_id": doc_id}
     except Exception as e:
-        print("업로드 실패:", e) 
+        print("업로드 실패:", e)
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 # 문서 업로드 API (hwp)
 @router.post("/upload/hwp")
-async def documents_upload(
+async def documents_upload_hwp(
     file: UploadFile = File(...),
     user_id: str = Form(...),
     category_id: Optional[str] = Form(None)
@@ -126,12 +124,12 @@ async def documents_upload(
     try:
         text = extract_text_from_hwp(contents)
         doc = Doc(
-        doc_id=await get_next_doc_id(),
-        user_id=user_id,
-        title=file.filename.rsplit(".", 1)[0],
-        contents=text,
-        file_type="hwp",
-        category_id=category_id or ""
+            doc_id=await get_next_doc_id(),
+            user_id=user_id,
+            title=file.filename.rsplit(".", 1)[0],
+            contents=text,
+            file_type="hwp",
+            category_id=category_id or ""
         )
         result = await upload_file(doc)
         doc_id = result.get("doc_id")
@@ -139,21 +137,11 @@ async def documents_upload(
             raise HTTPException(status_code=500, detail="문서 ID 생성 실패")
         return {"doc_id": doc_id}
     except Exception as e:
-        print("업로드 실패:", e) 
+        print("업로드 실패:", e)
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 # ======================== 챗봇 ========================
-# @router.get("/{documentId}")
-# async def get_temp_document(documentId: str):
-#     try:
-#         doc = await get_or_create_temp_doc(documentId)  # ← 기존 get_one_temp_doc → get_or_create_temp_doc
-#         if not doc:
-#             raise HTTPException(status_code=404, detail="Document not found")
-#         return doc
-#     except Exception as e:
-#         print("임시문서 조회 에러:", e)
-#         raise HTTPException(status_code=500, detail=str(e))
 
 # temp_docs 임시저장본 존재 여부
 @router.get("/temp/exists/{doc_id}")
@@ -162,7 +150,7 @@ async def check_temp_doc_exists(doc_id: str):
     return {"exists": exists}
 
 # temp_docs 임시저장본 조회 (존재 시에만)
-@router.get("/temp/{doc_id}")
+@router.get("/temp/{doc_id}", response_model=TempDoc)
 async def get_temp_doc_route(doc_id: str):
     doc = await get_temp_doc(doc_id)
     if not doc:
@@ -170,7 +158,7 @@ async def get_temp_doc_route(doc_id: str):
     return doc
 
 # docs 문서 조회
-@router.get("/{doc_id}")
+@router.get("/{doc_id}", response_model=Doc)
 async def get_doc_route(doc_id: str):
     doc = await get_doc(doc_id)
     if not doc:
