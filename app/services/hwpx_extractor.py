@@ -5,6 +5,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 JAR_PATH = os.path.join(BASE_DIR, "python-hwpxlib-main", "hwpxlib-1.0.5.jar")
 LOADER_PATH = os.path.join(BASE_DIR, "python-hwpxlib-main", "hwpx_loader.py")
 
+print("LOADER_PATH:", LOADER_PATH)
+print("JAR_PATH:", JAR_PATH)
+
 def extract_text_from_hwpx(file_bytes: bytes) -> str:
     import tempfile
     import subprocess
