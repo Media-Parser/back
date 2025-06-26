@@ -1,8 +1,12 @@
+# 📁 app/routes/chat.py
 from fastapi import APIRouter, HTTPException
 from app.services.chat_service import save_chat_qa, get_chat_history, delete_chat_history
 from app.models.chat_model import ChatSendRequest, ChatQA
 from typing import List
 import httpx
+import os
+
+AI_SERVER_URL = os.getenv("AI_SERVER_URL")
 
 router = APIRouter(prefix="/chat", tags=["Chatbot"])
 
@@ -34,7 +38,7 @@ async def your_ai_inference(message, article_content):
             "article_content": article_content
         }
         # AI inference 서버로 POST 요청
-        resp = await client.post("http://52.15.42.56:8081/chat/send", json=payload)
+        resp = await client.post(f"{AI_SERVER_URL}/chat/send", json=payload)
         resp.raise_for_status()
         data = resp.json()
         # AI 응답 형태에 맞춰 값 추출 (키 이름은 실제 응답 참고)
