@@ -6,4 +6,8 @@ PyJWT
 jwt
 python-multipart
 motor
-"pydantic[email]"
+# "pydantic[email]"
+python-magic
+httpx
+openai
+pymongo
