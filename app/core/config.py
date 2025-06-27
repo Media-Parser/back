@@ -14,6 +14,7 @@ class Settings:
     FRONTEND_URL = os.getenv("FRONTEND_URL")
     SECRET_KEY = os.getenv("SECRET_KEY", "ssami-secret")
     ATLAS_URI = os.getenv("ATLAS_URI")
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
     # CORS
     CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",") if o.strip()]

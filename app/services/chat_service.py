@@ -3,6 +3,7 @@ import os
 from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import datetime
 from typing import Optional, List
+from app.models.chat_model import ChatSendRequest
 import re
 
 ATLAS_URI = os.getenv("ATLAS_URI")
@@ -40,12 +41,12 @@ def convert_chat_qa(doc: dict) -> dict:
     return result
 
 # 채팅 QA 저장
-async def save_chat_qa(doc_id: str, question: str, answer: str, suggestion: Optional[str] = None) -> dict:
+async def save_chat_qa(question: ChatSendRequest, answer: str, suggestion: Optional[str] = None) -> dict:
     chat_id = await get_next_chat_id()  # 순차적 chat_id
     qa = {
         "chat_id": chat_id,
-        "doc_id": doc_id,
-        "question": question,
+        "doc_id": question.doc_id,
+        "question": question.dict(),  # ChatSendRequest 객체를 dict로 변환
         "answer": answer,
         "suggestion": suggestion,
         "created_dt": datetime.utcnow(),
