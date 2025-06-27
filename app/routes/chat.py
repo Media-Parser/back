@@ -1,6 +1,7 @@
 # 📁 app/routes/chat.py
 from fastapi import APIRouter, HTTPException
 from app.services.chat_service import save_chat_qa, get_chat_history, delete_chat_history
+from app.services.ai_service import generate_ai_response
 from app.models.chat_model import ChatSendRequest, ChatQA
 from typing import List
 import httpx
@@ -13,10 +14,16 @@ router = APIRouter(prefix="/chat", tags=["Chatbot"])
 # 질문 저장 (AI inference 후 값 입력)
 @router.post("/send", response_model=ChatQA)
 async def chat_send(req: ChatSendRequest):
-    # 실제로는 AI 서버에 req.message, req.article_content 등 전달
-    # 아래처럼 AI inference 로직 연동 (예시)
-    ai_answer, ai_suggestion = await your_ai_inference(req.message, req.article_content)
-    chat_qa = await save_chat_qa(req.doc_id, req.message, ai_answer, ai_suggestion)
+    # AI 서비스를 통해 응답 생성
+    ai_answer, ai_suggestion = await generate_ai_response(
+        message=req.message,
+        doc_id=req.doc_id,
+        selected_text=req.selected_text if req.selected_yn else None,
+        use_full_document=not req.selected_yn  # 선택된 텍스트가 없으면 전체 문서 사용
+    )
+    
+    # 채팅 QA 저장
+    chat_qa = await save_chat_qa(req, ai_answer, ai_suggestion)
     return chat_qa
 
 # 문서별 QA 히스토리
