@@ -49,7 +49,7 @@ async def save_chat_qa(question: ChatSendRequest, answer: str, suggestion: Optio
         "question": question.dict(),  # ChatSendRequest 객체를 dict로 변환
         "answer": answer,
         "suggestion": suggestion,
-        "created_dt": datetime.utcnow(),
+        "created_dt": datetime.now(),
     }
     await collection.insert_one(qa)
     return convert_chat_qa(qa)

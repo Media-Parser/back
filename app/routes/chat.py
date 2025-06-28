@@ -37,18 +37,3 @@ async def chat_history(doc_id: str):
 async def delete_history(doc_id: str):
     deleted = await delete_chat_history(doc_id)
     return {"deleted_count": deleted}
-
-async def your_ai_inference(message, article_content):
-    async with httpx.AsyncClient() as client:
-        payload = {
-            "message": message,
-            "article_content": article_content
-        }
-        # AI inference 서버로 POST 요청
-        resp = await client.post(f"{AI_SERVER_URL}/chat/send", json=payload)
-        resp.raise_for_status()
-        data = resp.json()
-        # AI 응답 형태에 맞춰 값 추출 (키 이름은 실제 응답 참고)
-        answer = data.get("chatbot_response") or data.get("article_content")
-        suggestion = data.get("suggestion")
-        return answer, suggestion

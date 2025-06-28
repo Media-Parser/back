@@ -30,7 +30,7 @@ async def ai_chat_endpoint(req: AIRequest):
             chatbot_response="",
             article_content=ai_answer,
             key_points=[],
-            timestamp=datetime.utcnow().isoformat() + "Z"
+            timestamp=datetime.now().isoformat() + "Z"
         )
         
     except Exception as e:
@@ -38,5 +38,5 @@ async def ai_chat_endpoint(req: AIRequest):
             chatbot_response=f"오류가 발생했습니다: {str(e)}",
             article_content="",
             key_points=[],
-            timestamp=datetime.utcnow().isoformat() + "Z"
+            timestamp=datetime.now().isoformat() + "Z"
         )
