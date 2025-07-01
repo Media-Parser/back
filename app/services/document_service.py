@@ -69,6 +69,12 @@ async def update_document_title(doc_id: str, new_title: str) -> bool:
 
 # 문서 다운로드
 async def download_file(document_id: str):
+    # 1. temp_docs에 우선 검색
+    doc = await temp_collection.find_one({"doc_id": document_id})
+    if doc:
+        doc.pop("_id", None)
+        return doc
+    # 2. temp에 없으면 원본 docs에서 검색
     doc = await collection.find_one({"doc_id": document_id})
     if doc:
         doc.pop("_id", None)
@@ -111,6 +117,10 @@ async def get_doc(doc_id: str):
     doc = await collection.find_one({"doc_id": doc_id})
     if doc: doc.pop("_id", None)
     return doc
+
+# temp_docs 삭제
+async def delete_temp_doc(doc_id: str):
+    await temp_collection.delete_one({"doc_id": doc_id})
 
 # temp_docs 업데이트
 async def update_temp_doc(doc_id: str, update_data: dict):

@@ -32,6 +32,7 @@ class ChatQA(BaseModel):
     chat_id: str
     doc_id: str
     question: ChatSendRequest
+    selection: Optional[str] = None
     answer: str
     suggestion: Optional[str] = None
     created_dt: datetime

@@ -54,12 +54,7 @@ async def download_document(doc_id: str):
 
         title = doc.get('title', 'document')
         ext = doc.get('file_type', '')
-
-        print("title:", title)
-        print("ext:", ext)
-
-        filename = f"{title}.{ext}" if ext else title + ".hwpx"
-        print("filename:", filename)
+        filename = f"{title}.{ext}" if ext else f"{title}.hwpx"
         quoted_filename = quote(filename)
         headers = {
             "Content-Disposition": f"attachment; filename*=UTF-8''{quoted_filename}"
@@ -161,6 +156,13 @@ async def get_temp_doc_route(doc_id: str):
     if not doc:
         raise HTTPException(404, "임시저장 문서가 없습니다")
     return doc
+
+# temp_docs 임시저장본 삭제
+@router.delete("/temp/{doc_id}")
+async def delete_temp_doc(doc_id: str):
+    from app.services.document_service import delete_temp_doc
+    await delete_temp_doc(doc_id)
+    return {"message": "임시저장 삭제 완료"}
 
 # docs 문서 조회
 @router.get("/{doc_id}")
