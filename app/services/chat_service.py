@@ -73,3 +73,9 @@ async def delete_chat_history(doc_id: str) -> int:
     except Exception as e:
         print("delete_chat_history error:", e)
         return 0
+
+# 문서별 QA 히스토리 불러오기 (최신순, 최대 10개)
+async def get_chat_history_for_prompt(doc_id: str, limit: int = 10):
+    cursor = collection.find({"doc_id": doc_id}).sort("created_dt", -1)
+    docs_raw = await cursor.to_list(length=limit)
+    return list(reversed(docs_raw))  # 최신순 → 대화 흐름순으로
