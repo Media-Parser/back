@@ -6,7 +6,7 @@ async def test_ai_chat_send(client, dummy_user, auth_headers):
     print("\n=== [AI 챗 API 테스트 시작] ===")
     headers = auth_headers(dummy_user["user_id"])
     payload = {
-        "doc_id": "doc_00000001",
+        "doc_id": "doc_12345678",
         "message": "AI에게 질문합니다.",
         "contain": True,
         "content": "테스트 본문"

@@ -77,6 +77,8 @@ async def delete_document(doc_id: str):
     try:
         await delete_file(doc_id)
         return {"message": "Document deleted successfully"}
+    except HTTPException as e:
+        raise e
     except Exception as e:
         print("문서삭제 에러:", e)
         raise HTTPException(status_code=500, detail=str(e))

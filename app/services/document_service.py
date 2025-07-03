@@ -5,6 +5,7 @@ from app.models.document_model import Doc
 from datetime import datetime
 import re
 from typing import Optional
+from fastapi import HTTPException
 
 ATLAS_URI = os.getenv("ATLAS_URI")
 client = AsyncIOMotorClient(ATLAS_URI)
@@ -86,8 +87,10 @@ async def delete_file(document_id: str):
         {"doc_id": document_id},
         {"$set": {"delete_yn": "y"}}
     )
-    await temp_collection.delete_one({"doc_id": document_id})  # 임시저장도 같이 삭제
-    return result.modified_count > 0
+    await temp_collection.delete_one({"doc_id": document_id})
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Document not found")
+    return True
 
 # 문서 업로드
 async def upload_file(file: Doc):

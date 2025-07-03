@@ -46,7 +46,7 @@ async def save_chat_qa(question: ChatSendRequest, answer: str, suggestion: Optio
     qa = {
         "chat_id": chat_id,
         "doc_id": question.doc_id,
-        "question": question.dict(),
+        "question": question.model_dump(),
         "selection": question.selected_text if question.selected_text else None,
         "answer": answer,
         "suggestion": suggestion,

@@ -3,13 +3,18 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 from datetime import datetime
 from typing import Optional
+from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import re
 
 MONGO_URI = os.getenv("ATLAS_URI")
-client = AsyncIOMotorClient(MONGO_URI)
-db = client["uploadedbyusers"]
-collection = db["categories"]
+# client = AsyncIOMotorClient(MONGO_URI)
+# db = client["uploadedbyusers"]
+# collection = db["categories"]
+# doc_collection = db["docs"]
+
+collection = None  # patch로 주입받음
+doc_collection = None  # patch로 주입받음
 
 # 카테고리 ID 생성
 async def get_next_category_id():
@@ -71,7 +76,7 @@ async def add_category(user_id: str, label: str, path: Optional[str] = None):
 # 카테고리 삭제
 async def delete_category(category_id: str):
     result = await collection.delete_one({"category_id": category_id})
-    doc_collection = db["docs"]
+    # doc_collection = db["docs"]
 
     await doc_collection.update_many(
         {"category_id": category_id},
@@ -106,7 +111,7 @@ async def update_category(category_id: str, label: str):
 
 # 카테고리 이동
 async def move_document(doc_id: str, category_id: str):
-    doc_collection = db["docs"]
+    # doc_collection = db["docs"]
     await doc_collection.update_one(
         {"doc_id": doc_id},
         {"$set": {
