@@ -65,6 +65,8 @@ async def download_document(doc_id: str):
             media_type="application/octet-stream",
             headers=headers
         )
+    except HTTPException as e:
+        raise
     except Exception as e:
         print("문서다운로드 에러:", e)
         raise HTTPException(status_code=500, detail=str(e))
