@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, Form, Response, Query, Body
+from fastapi import APIRouter, UploadFile, File, HTTPException, Form, Response, Query, Body, Depends
 from app.services.hwpx_extractor import extract_text_from_hwpx
 from app.services.hwp_extractor import extract_text_from_hwp
 from app.services.document_service import (
@@ -13,8 +13,9 @@ from urllib.parse import quote
 import magic
 import tempfile
 import os
+from app.core.jwt import get_current_user
 
-router = APIRouter(prefix="/documents", tags=["Documents"])
+router = APIRouter(prefix="/documents", tags=["Documents"], dependencies=[Depends(get_current_user)])
 
 # ======================== 대시보드 ========================
 

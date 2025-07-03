@@ -1,10 +1,11 @@
 # app/routes/ai.py
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from app.services.ai_service import generate_ai_response, get_document_content
 from app.models.chat_model import AIRequest, AIResponse
 from datetime import datetime
+from app.core.jwt import get_current_user
 
-router = APIRouter(prefix="/chat", tags=["AI"])
+router = APIRouter(prefix="/chat", tags=["AI"], dependencies=[Depends(get_current_user)])
 
 @router.post("/send", response_model=AIResponse)
 async def ai_chat_endpoint(req: AIRequest):

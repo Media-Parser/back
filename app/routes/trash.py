@@ -1,5 +1,5 @@
 # 📁 app/routes/trash.py
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
 from fastapi.responses import JSONResponse
 from app.services.trash_service import (
     get_deleted_documents,
@@ -9,8 +9,9 @@ from app.services.trash_service import (
 )
 from app.models.document_model import Doc
 from typing import List
+from app.core.jwt import get_current_user
 
-router = APIRouter(prefix="/trash", tags=["Trash"])
+router = APIRouter(prefix="/trash", tags=["Trash"], dependencies=[Depends(get_current_user)])
 
 # 1. 휴지통 문서 목록 조회
 @router.get("/", response_model=List[Doc])

@@ -1,10 +1,10 @@
 # 📁 app/services/oauth_google.py
 import os
-import requests
 from urllib.parse import urlencode
 from fastapi import HTTPException
 from app.core.security import create_jwt_token
 from app.services.user_service import find_user_by_email_provider, find_or_create_user
+import httpx
 
 GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
@@ -26,21 +26,22 @@ def get_google_auth_url():
     return f"{GOOGLE_AUTH_URL}?{urlencode(params)}"
 
 async def get_google_user_info(code: str):
-    token_data = {
-        "code": code,
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
-        "redirect_uri": REDIRECT_URI,
-        "grant_type": "authorization_code",
-    }
-    token_res = requests.post(GOOGLE_TOKEN_URL, data=token_data)
-    if not token_res.ok:
-        raise HTTPException(status_code=400, detail="Failed to fetch token from Google")
-    token_json = token_res.json()
-    access_token = token_json.get("access_token")
-    user_res = requests.get(GOOGLE_USERINFO_URL, headers={"Authorization": f"Bearer {access_token}"})
-    if not user_res.ok:
-        raise HTTPException(status_code=400, detail="Failed to fetch user info")
+    async with httpx.AsyncClient() as client:
+        token_data = {
+            "code": code,
+            "client_id": CLIENT_ID,
+            "client_secret": CLIENT_SECRET,
+            "redirect_uri": REDIRECT_URI,
+            "grant_type": "authorization_code",
+        }
+        token_res = await client.post(GOOGLE_TOKEN_URL, data=token_data)
+        if not token_res.status_code == 200:
+            raise HTTPException(status_code=400, detail="Failed to fetch token from Google")
+        token_json = token_res.json()
+        access_token = token_json.get("access_token")
+        user_res = await client.get(GOOGLE_USERINFO_URL, headers={"Authorization": f"Bearer {access_token}"})
+        if not user_res.status_code == 200:
+            raise HTTPException(status_code=400, detail="Failed to fetch user info")
 
     user_data = user_res.json()
     user_email = user_data.get("email")

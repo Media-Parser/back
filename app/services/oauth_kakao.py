@@ -1,9 +1,10 @@
+# 📁 app/services/oauth_kakao.py
 import os
-import requests
 from urllib.parse import urlencode
 from fastapi import HTTPException
 from app.core.security import create_jwt_token
 from app.services.user_service import find_user_by_email_provider, find_or_create_user
+import httpx
 
 KAKAO_AUTH_URL = "https://kauth.kakao.com/oauth/authorize"
 KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token"
@@ -31,24 +32,24 @@ async def get_kakao_user_info(code: str):
     if KAKAO_CLIENT_SECRET:
         token_data["client_secret"] = KAKAO_CLIENT_SECRET
 
-    token_res = requests.post(KAKAO_TOKEN_URL, data=token_data)
-    if not token_res.ok:
-        raise HTTPException(status_code=400, detail="Failed to fetch token from Kakao")
-    token_json = token_res.json()
-    access_token = token_json.get("access_token")
-    user_res = requests.get(KAKAO_USERINFO_URL, headers={"Authorization": f"Bearer {access_token}"})
-    if not user_res.ok:
-        raise HTTPException(status_code=400, detail="Failed to fetch user info from Kakao")
+    async with httpx.AsyncClient() as client:
+        token_res = await client.post(KAKAO_TOKEN_URL, data=token_data)
+        if not token_res.is_success:
+            raise HTTPException(status_code=400, detail="Failed to fetch token from Kakao")
+        token_json = token_res.json()
+        access_token = token_json.get("access_token")
+        user_res = await client.get(KAKAO_USERINFO_URL, headers={"Authorization": f"Bearer {access_token}"})
+        if not user_res.is_success:
+            raise HTTPException(status_code=400, detail="Failed to fetch user info from Kakao")
 
     user_data = user_res.json()
     kakao_account = user_data.get("kakao_account", {})
     profile = kakao_account.get("profile", {})
 
-    user_email = kakao_account.get("email") or f"{user_data.get('id')}@kakao.com"  # email이 필수가 아니어서 대체
+    user_email = kakao_account.get("email") or f"{user_data.get('id')}@kakao.com"
     user_name = profile.get("nickname") or "카카오사용자"
     provider = "kakao"
 
-    # 1. 기존 이메일로 유저 검색 (이미 있으면 기존 user_id 사용)
     user = await find_user_by_email_provider(user_email, provider)
     if user:
         user_id = user.user_id

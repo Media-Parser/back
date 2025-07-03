@@ -1,15 +1,16 @@
 # 📁 app/routes/chat.py
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from app.services.chat_service import save_chat_qa, get_chat_history, delete_chat_history
 from app.services.ai_service import generate_ai_response
 from app.models.chat_model import ChatSendRequest, ChatQA
 from typing import List
 import httpx
 import os
+from app.core.jwt import get_current_user
 
 AI_SERVER_URL = os.getenv("AI_SERVER_URL")
 
-router = APIRouter(prefix="/chat", tags=["Chatbot"])
+router = APIRouter(prefix="/chat", tags=["Chatbot"], dependencies=[Depends(get_current_user)])
 
 # 질문 저장 (AI inference 후 값 입력)
 @router.post("/send", response_model=ChatQA)
