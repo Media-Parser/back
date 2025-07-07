@@ -8,13 +8,13 @@ import os
 import re
 
 MONGO_URI = os.getenv("ATLAS_URI")
-# client = AsyncIOMotorClient(MONGO_URI)
-# db = client["uploadedbyusers"]
-# collection = db["categories"]
-# doc_collection = db["docs"]
+client = AsyncIOMotorClient(MONGO_URI)
+db = client["uploadedbyusers"]
+collection = db["categories"]
+doc_collection = db["docs"]
 
-collection = None  # patch로 주입받음
-doc_collection = None  # patch로 주입받음
+# collection = None  # patch로 주입받음
+# doc_collection = None  # patch로 주입받음
 
 # 카테고리 ID 생성
 async def get_next_category_id():
