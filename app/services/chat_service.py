@@ -40,9 +40,25 @@ def convert_chat_qa(doc: dict) -> dict:
             result[key] = value
     return result
 
+def extract_apply_value_and_type(answer: str) -> tuple[Optional[str], Optional[str]]:
+    # 제목
+    m = re.search(r'변경 제목 제안\s*[:：]\s*["“](.{3,}?)["”]', answer)
+    if m:
+        return m.group(1).strip(), "title"
+    # 본문(적용/추천/수정 문장)
+    m = re.search(r'(적용할 문장|추천 문장|수정 문장)\s*[:：]\s*["“](.{3,}?)["”]', answer)
+    if m:
+        return m.group(2).strip(), "body"
+    # 리스트 타입은 body로만
+    m = re.search(r'\d+\.\s*["“](.{3,}?)["”]', answer)
+    if m:
+        return m.group(1).strip(), "body"
+    return None, None
+
 # 채팅 QA 저장
 async def save_chat_qa(question: ChatSendRequest, answer: str, suggestion: Optional[str] = None) -> dict:
-    chat_id = await get_next_chat_id()  # 순차적 chat_id
+    chat_id = await get_next_chat_id()
+    apply_value, value_type = extract_apply_value_and_type(answer) 
     qa = {
         "chat_id": chat_id,
         "doc_id": question.doc_id,
@@ -50,6 +66,8 @@ async def save_chat_qa(question: ChatSendRequest, answer: str, suggestion: Optio
         "selection": question.selected_text if question.selected_text else None,
         "answer": answer,
         "suggestion": suggestion,
+        "apply_value": apply_value,
+        "type": value_type,  
         "created_dt": datetime.now(),
     }
     await collection.insert_one(qa)
