@@ -2,8 +2,6 @@ fastapi
 uvicorn
 python-dotenv
 requests
-PyJWT
-jwt
 python-multipart
 motor
 # "pydantic[email]"
@@ -11,3 +9,6 @@ python-magic
 httpx
 openai
 pymongo
+email-validator
+python-jose
+PyJWT
