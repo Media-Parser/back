@@ -1,10 +1,10 @@
 # 📁 app/routes/user.py
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from app.services import user_service
 from app.models.user_model import UserInDB
 from app.services.user_service import delete_user_and_related
-
-router = APIRouter(prefix="/users", tags=["Users"])
+from app.core.jwt import get_current_user
+router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(get_current_user)])
 
 # 사용자 조회
 @router.get("/{user_id}", response_model=UserInDB)

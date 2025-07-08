@@ -8,4 +8,4 @@ class UserInDB(BaseModel):
     user_name: str
     user_email: EmailStr
     provider: str
-    create_dt: Optional[datetime] = None
+    create_dt: Optional[datetime] = Field(default_factory=datetime.now)

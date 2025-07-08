@@ -1,9 +1,10 @@
+# 📁 app/services/oauth_naver.py
 import os
-import requests
 from urllib.parse import urlencode
 from fastapi import HTTPException
 from app.core.security import create_jwt_token
-from app.services.user_service import find_user_by_email_provider, find_or_create_user  
+from app.services.user_service import find_user_by_email_provider, find_or_create_user
+import httpx
 
 NAVER_AUTH_URL = "https://nid.naver.com/oauth2.0/authorize" 
 NAVER_TOKEN_URL = "https://nid.naver.com/oauth2.0/token"
@@ -30,14 +31,15 @@ async def get_naver_user_info(code: str, state: str):
         "code": code,
         "state": state
     }
-    token_res = requests.post(NAVER_TOKEN_URL, data=token_params)
-    if not token_res.ok:
-        raise HTTPException(status_code=400, detail="Failed to fetch token from Naver")
-    token_json = token_res.json()
-    access_token = token_json.get("access_token")
-    user_res = requests.get(NAVER_USERINFO_URL, headers={"Authorization": f"Bearer {access_token}"})
-    if not user_res.ok:
-        raise HTTPException(status_code=400, detail="Failed to fetch user info from Naver")
+    async with httpx.AsyncClient() as client:
+        token_res = await client.post(NAVER_TOKEN_URL, data=token_params)
+        if not token_res.is_success:
+            raise HTTPException(status_code=400, detail="Failed to fetch token from Naver")
+        token_json = token_res.json()
+        access_token = token_json.get("access_token")
+        user_res = await client.get(NAVER_USERINFO_URL, headers={"Authorization": f"Bearer {access_token}"})
+        if not user_res.is_success:
+            raise HTTPException(status_code=400, detail="Failed to fetch user info from Naver")
 
     user_data = user_res.json().get("response", {})
     user_email = user_data.get("email") or f"{user_data.get('id')}@naver.com"

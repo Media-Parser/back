@@ -1,8 +1,9 @@
 # 📁 app/routes/auth.py
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
 from fastapi.responses import RedirectResponse
 from app.services import oauth_google, oauth_kakao, oauth_naver
 import os
+from app.core.jwt import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 

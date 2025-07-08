@@ -6,43 +6,49 @@ import io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
-def hwpx_extract(hwpx_jar_path, file_path):
-
-    ## jpype 시작
-    jpype.startJVM(
-        jpype.getDefaultJVMPath(),
-        "-Djava.class.path={classpath}".format(classpath=hwpx_jar_path),
-        convertStrings=True,
-        )
-
-    ## java package 가져오기
-
-    HWPXFile = jpype.JClass('kr.dogfoot.hwpxlib.reader.HWPXReader')
-    TextExtractor = jpype.JClass('kr.dogfoot.hwpxlib.tool.textextractor.TextExtractor')
-    TextExtractMethod = jpype.JClass('kr.dogfoot.hwpxlib.tool.textextractor.TextExtractMethod')
-    TextMarks = jpype.JClass('kr.dogfoot.hwpxlib.tool.textextractor.TextMarks')
-    
-    
-    hwpx_file = HWPXFile.fromFilepath(file_path)
-    text_extract_method = TextExtractMethod.AppendControlTextAfterParagraphText  
-    text_marks = TextMarks()
-    
-
-    # 한글 추출
-    hwpxtext = TextExtractor.extract(hwpx_file, text_extract_method, True, text_marks)
-
-    return hwpxtext
-
-
-if __name__=="__main__":
-    
-    # 파라미터 파싱    
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Hwpx loader')
-    parser.add_argument('--hwpx_jar_path', type=str, default='./hwpxlib-1.0.3.jar', help='hwpxlib jar 위치')
-    parser.add_argument('--file_path', type=str, default='./test.hwpx', help='hwpx 파일 경로')
+    parser.add_argument('--hwpx_jar_path', type=str, required=True, help='hwpxlib jar 위치')
+    parser.add_argument('--file_path', type=str, required=True, help='hwpx 파일 경로')
+    parser.add_argument('--output', type=str, required=True, help='본문을 저장할 텍스트파일 경로')
     args = parser.parse_args()
 
-    hwp_text = hwpx_extract(args.hwpx_jar_path, args.file_path)
-    
-    # print로 표준출력
-    print(hwp_text)
+    jpype.startJVM(
+        jpype.getDefaultJVMPath(),
+        "-Djava.class.path={classpath}".format(classpath=args.hwpx_jar_path),
+        convertStrings=True,
+    )
+
+    HWPXReader_class = jpype.JPackage('kr.dogfoot.hwpxlib.reader')
+    TextExtrac_class = jpype.JPackage('kr.dogfoot.hwpxlib.tool.textextractor')
+    HWPXReader_ = HWPXReader_class.HWPXReader
+    TextExtractMethod_ = TextExtrac_class.TextExtractMethod
+    TextExtractor_ = TextExtrac_class.TextExtractor
+    TextMarks_ = TextExtrac_class.TextMarks   # 추가
+
+    # Java의 java.io.File 클래스를 import
+    javaio = jpype.JPackage('java').io
+    file_obj = javaio.File(args.file_path)
+    parser_obj = HWPXReader_.fromFile(file_obj)
+
+    extract_methods = [
+        TextExtractMethod_.InsertControlTextBetweenParagraphText,
+        TextExtractMethod_.AppendControlTextAfterParagraphText,
+    ]
+
+    best_result = ""
+    for method in extract_methods:
+        hwpxText = TextExtractor_.extract(
+            parser_obj,
+            method,
+            True,
+            TextMarks_()
+        )
+        if hwpxText.strip():
+            best_result = hwpxText
+            break
+
+    jpype.shutdownJVM()
+
+    with open(args.output, "w", encoding="utf-8") as f:
+        f.write(best_result)

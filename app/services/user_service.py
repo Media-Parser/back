@@ -48,7 +48,7 @@ async def find_or_create_user(user_name, user_email, provider):
         "user_name": user_name,
         "user_email": user_email,
         "provider": provider,
-        "create_dt": datetime.utcnow()
+        "create_dt": datetime.now()
     }
 
     result = await collection.insert_one(doc)

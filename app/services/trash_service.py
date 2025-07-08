@@ -14,13 +14,18 @@ collection = db['docs']
 # ======================== 휴지통 ========================
 # MongoDB 문서에서 ObjectId, datetime 등을 문자열로 변환
 def convert_mongo_document(doc: dict) -> dict:
-    """MongoDB 문서에서 ObjectId, datetime 등을 문자열로 변환"""
+    """MongoDB 문서에서 ObjectId, datetime, bytes 등을 문자열로 변환"""
     result = {}
     for key, value in doc.items():
         if isinstance(value, ObjectId):
             result[key] = str(value)
         elif isinstance(value, datetime):
-            result[key] = value.isoformat()  # "2025-06-14T16:11:00"
+            result[key] = value.isoformat()
+        elif isinstance(value, bytes):  # ★ 여기를 추가!
+            try:
+                result[key] = value.decode("utf-8")
+            except UnicodeDecodeError:
+                result[key] = value.decode("utf-8", errors="replace")  # 깨진 부분은 �로 대체
         else:
             result[key] = value
     return result
