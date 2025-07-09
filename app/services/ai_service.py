@@ -96,13 +96,13 @@ def build_messages_with_history(
         q_txt = q.get("message") if isinstance(q, dict) else str(q)
         # selection 보여주고 싶으면 추가
         if q.get("selected_text"):
-            q_txt += f"\n\n(참고한 부분: {q['selected_text']})"
+            q_txt += f"\n\n{q['selected_text']}"
         messages.append({"role": "user", "content": q_txt})
         messages.append({"role": "assistant", "content": qa.get("answer", "")})
     # 마지막: 현재 질문 추가
     new_q = user_message
     if selected_text:
-        new_q += f"\n\n(참고한 부분: {selected_text})"
+        new_q += f"\n\n{selected_text}"
     if doc_content and isinstance(doc_content, dict):
         title = doc_content.get("title", "")
         contents = doc_content.get("contents", "")
