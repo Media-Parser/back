@@ -62,51 +62,27 @@ def find_substring_index(full, sub):
     return idx
 
 def extract_apply_info(answer: str, question: ChatSendRequest, doc_contents: str):
-    # 1. After 블록 전체 추출 (여러 줄도 포함)
-    after_match = re.search(
-        r'\*\*After:\*\*\s*([\s\S]+?)(?:\n\s*>\s*변경 이유:|\n\s*\*\*|\Z)', answer)
-    if after_match:
-        after = after_match.group(1)
-        # 블록 전체 앞뒤 쓸데없는 따옴표, 괄호 등 한 번만 정리
-        after = after.strip()
-        after = re.sub(r'^[\(\["“]+', '', after)
-        after = re.sub(r'[\)"”]+$', '', after)
-        # 비어있지 않으면 반환
-        if after.strip():
-            # before 도 똑같이 잡아서 위치 매칭
-            before_match = re.search(
-                r'\*\*Before:\*\*\s*([\s\S]+?)(?:\n\s*\*\*After:|\n\s*\*\*|\Z)', answer)
-            if before_match:
-                before = before_match.group(1).strip()
-                before = re.sub(r'^[\(\["“]+', '', before)
-                before = re.sub(r'[\)"”]+$', '', before)
-                # 위치 매칭
-                idx = doc_contents.find(before)
-                if idx < 0:
-                    norm_full = normalize_text(doc_contents)
-                    norm_before = normalize_text(before)
-                    idx = norm_full.find(norm_before)
-                    # 정확 매핑 어렵다면 idx만 반환(대부분 문단이면 충분)
-                if idx >= 0:
-                    return after, "body", idx, idx + len(before)
-            # Before 매칭 실패하면 그냥 After 전체 반환(위치 지정 X)
-            return after, "body", None, None
+    # 1. 마크다운 리스트(- 제목) 우선
+    md_titles = re.findall(r'-\s*([^\n]+)', answer)
+    if md_titles:
+        # 첫 번째만 대표값으로 apply_value로 반환
+        first_title = md_titles[0].strip()
+        return first_title, "title", None, None
 
-    # 2. 라벨(적용할 문장, 추천 문장 등) 패턴도 여전히 지원
-    m = re.search(r'(적용할 문장|추천 문장|수정 문장|변경 제목 제안)\s*[:：]\s*["“]([\s\S]{2,}?)["”]', answer)
-    if m:
-        label = m.group(1)
-        txt = m.group(2).strip()
-        # 사용자의 질문이 '제목'이 아닌 '부분/내용' 수정이면 apply_body로!
-        if "제목" not in (question.message or ""):
-            return txt, "body", None, None
-        vtype = "title" if label == "변경 제목 제안" else "body"
-        return txt, vtype, None, None
+    # 2. 마크다운 없이 줄바꿈만 있을 때
+    lines = [line.strip() for line in answer.split('\n') if line.strip()]
+    # 안내 문구, 3글자 이하 등 제외
+    titles = [line for line in lines if not line.startswith("추천 기사 제목은") and len(line) > 3]
+    if titles:
+        first_title = titles[0]
+        return first_title, "title", None, None
 
     # 3. 리스트 첫 번째 추천 등
-    m = re.search(r'\d+\.\s*["“]([^"”]{2,})["”]', answer)
+    m = re.findall(r'-\s*([^\n]+)', answer)
     if m:
-        return m.group(1).strip(), "body", None, None
+        # 맨 앞 제목만 apply_value로, 나머지는 그대로 둠
+        first_title = m[0].strip()
+        return first_title, "title", None, None
 
     # 4. 선택된 부분 있으면, 그 위치 반환
     selected_text = getattr(question, "selected_text", None)
@@ -114,6 +90,14 @@ def extract_apply_info(answer: str, question: ChatSendRequest, doc_contents: str
         idx = doc_contents.find(selected_text)
         if idx >= 0:
             return selected_text, "body", idx, idx + len(selected_text)
+        
+    # 5. 줄바꿈만으로 나눠진 경우(마크다운 리스트 없이)
+    lines = [line.strip() for line in answer.split('\n') if line.strip()]
+    # 안내 문구 등 제외
+    titles = [line for line in lines if not line.startswith("추천 기사 제목은") and len(line) > 3]
+    if titles:
+        first_title = titles[0]
+        return first_title, "title", None, None
 
     return None, None, None, None
 
