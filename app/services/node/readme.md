@@ -56,7 +56,7 @@ class GraphState(TypedDict):
 
 ---
 
-### 3️⃣ **03_retrieval/standard_retrieval_node.py, balanced_retrieval_node.py**
+### 3️⃣ **04_retrieval/standard_retrieval_node.py, balanced_retrieval_node.py**
 - **입력**:  
   - `plan`
 - **출력**:  
@@ -65,7 +65,7 @@ class GraphState(TypedDict):
 
 ---
 
-### 4️⃣ **03_retrieval/grade_and_filter_node.py**
+### 4️⃣ **04_retrieval/grade_and_filter_node.py**
 - **입력**:  
   - `documents`
   - `original_question`

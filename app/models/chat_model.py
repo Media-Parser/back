@@ -38,8 +38,6 @@ class ChatQA(BaseModel):
     apply_title: Optional[str] = None
     apply_body: Optional[str] = None 
     type: Optional[str] = None
-    start_index: Optional[int] = None
-    end_index: Optional[int] = None
     created_dt: datetime
 
 # chatQA 생성시 list 에 추가

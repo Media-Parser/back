@@ -16,13 +16,13 @@ plan_module = importlib.import_module('.02_plan.plan_retrieval_node', package=__
 plan_retrieval_node = plan_module.plan_retrieval_node
 
 
-balanced_module = importlib.import_module('.03_retrieval.balanced_retrieval_node', package=__name__)
+balanced_module = importlib.import_module('.04_retrieval.balanced_retrieval_node', package=__name__)
 balanced_retrieval_node = balanced_module.balanced_retrieval_node
 
-grade_module = importlib.import_module('.03_retrieval.grade_and_filter_node', package=__name__)
+grade_module = importlib.import_module('.04_retrieval.grade_and_filter_node', package=__name__)
 grade_and_filter_node = grade_module.grade_and_filter_node
 
-standard_module = importlib.import_module('.03_retrieval.standard_retrieval_node', package=__name__)
+standard_module = importlib.import_module('.04_retrieval.standard_retrieval_node', package=__name__)
 standard_retrieval_node = standard_module.standard_retrieval_node
 
 # Generate

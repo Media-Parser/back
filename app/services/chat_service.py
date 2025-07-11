@@ -29,6 +29,7 @@ async def get_next_chat_id():
 
     return f"chat_{next_number:08d}"
 
+# 채팅 QA 저장
 def convert_chat_qa(doc: dict) -> dict:
     result = {}
     for key, value in doc.items():
@@ -40,6 +41,7 @@ def convert_chat_qa(doc: dict) -> dict:
             result[key] = value
     return result
 
+# 텍스트 정규화
 def normalize_text(text):
     text = re.sub(r'\s+', '', text)      # 모든 공백 제거
     text = text.replace('\u200b', '')    # zero width space 제거
@@ -48,7 +50,7 @@ def normalize_text(text):
     text = text.strip()
     return text
 
-
+# 전체 문서에서 부분문장 찾기
 def find_substring_index(full, sub):
     norm_full = normalize_text(full)
     norm_sub = normalize_text(sub)
@@ -61,6 +63,7 @@ def find_substring_index(full, sub):
     # 여기선 대충 first match만 (문장이 길지 않으니 대부분 ok)
     return idx
 
+# 답변에서 추천 기사 제목 추출
 def extract_apply_info(answer: str, question: ChatSendRequest, doc_contents: str):
     # 1. 마크다운 리스트(- 제목) 우선
     md_titles = re.findall(r'-\s*([^\n]+)', answer)
