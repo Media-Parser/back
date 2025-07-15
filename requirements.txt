@@ -21,7 +21,6 @@ passlib
 
 # 파일 및 데이터 처리
 python-magic
-python-magic-bin
 tqdm>=4.0.0
 
 # OpenAI, LLM, LangChain/Graph

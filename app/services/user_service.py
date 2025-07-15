@@ -16,6 +16,7 @@ collection = db['users']
 docs_collection = db['docs']
 temp_docs_collection = db['temp_docs']
 categories_collection = db['categories']
+chat_collection = db['chat_qas']
 
 tz_kst = timezone(timedelta(hours=9))
 
@@ -80,6 +81,7 @@ async def find_user_by_id(user_id: str):
 
 # 사용자 및 연관 데이터 삭제
 async def delete_user_and_related(user_id: str):
+    await chat_collection.delete_many({"user_id": user_id})
     await docs_collection.delete_many({"user_id": user_id})
     await temp_docs_collection.delete_many({"user_id": user_id})
     await categories_collection.delete_many({"user_id": user_id})

@@ -34,7 +34,7 @@ CSV_PATH = os.path.abspath(os.path.join(BASE_DIR, "../finetune/train.csv"))
 df = pd.read_csv(CSV_PATH)
 highlight_map = {}  # (문장, 라벨) -> 문제부분
 for _, row in df.iterrows():
-    highlight_map[(row["sentence"], row["label"])] = row["problematic"]
+    highlight_map[(row["content"], row["label"])] = row["highlighted"]
 
 # def run_exaone_batch(sentences):
 #     results = []
@@ -48,10 +48,10 @@ for _, row in df.iterrows():
 #             explanation = LABEL_EXPLANATIONS.get(label, "")
 #             problematic = highlight_map.get((sent, label), "")  # (문장, 라벨)에 맞는 하이라이트 반환
 #         results.append({
-#             "sentence": sent,
-#             "label": label,
-#             "problematic": problematic,    # 문제 부분(하이라이트)
-#             "explanation": explanation     # 라벨 설명
+#             "content": sent,
+            # "label": label,
+            # "highlighted": highlighted,  # 문제 부분
+            # "explanation": explanation
 #         })
 #     return results
 
@@ -59,9 +59,9 @@ def run_exaone_batch(sentences):
     # 아직 파인튜닝 모델 없음
     return [
         {
-            "sentence": sent,
+            "content": sent,
             "label": "미지원",
-            "problematic": "",
+            "highlighted": "",
             "explanation": "파인튜닝된 모델이 아직 준비되지 않았습니다."
         }
         for sent in sentences
