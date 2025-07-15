@@ -1,4 +1,5 @@
 # service/node/05_generate/generate_title_node.py
+
 import json
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -23,13 +24,12 @@ class GraphState(TypedDict, total=False):
     generation: str
     context: str
     doc_id: Optional[str]
-    value_type: str
-    apply_value: Optional[str]
+    apply_title: Optional[str]
 
 def generate_titles(
     article_content: str,
     num_titles: int = 5,
-    model: str = "gpt-3.5-turbo"
+    model: str = "gpt-4o-mini"
 ) -> Dict[str, List[str]]:
     """
     기사 본문을 기반으로 추천 제목 리스트를 JSON 형식으로 생성합니다.
@@ -55,11 +55,11 @@ def generate_titles(
 
     반드시 아래와 같은 JSON 형식으로만 응답해야 합니다:
     {{
-      "titles": [
-        "생성된 첫 번째 제목",
-        "생성된 두 번째 제목",
-        ...
-      ]
+        "titles": [
+            "생성된 첫 번째 제목",
+            "생성된 두 번째 제목",
+            ...
+        ]
     }}
 
     --- 기사 내용 ---
@@ -110,13 +110,12 @@ def generate_titles_node(state: GraphState) -> GraphState:
         # 생성된 제목들을 사용자가 보기 좋은 형식의 문자열로 변환
         formatted_titles = "\n".join([f"- {title}" for title in title_result.get("titles", [])])
         generation = f"추천 기사 제목은 다음과 같습니다.\n\n{formatted_titles}"
-        
+
     # 그래프의 'generation' 상태를 업데이트하여 반환
     return {
         **state,
         "generation": generation,
-        "value_type": "title",
-        "apply_value": title_result.get("titles", [""])[0],  # 첫 번째 제목만
+        "apply_title": title_result.get("titles", [""])[0],  # 첫 번째 제목만
     }
 
 
@@ -125,9 +124,9 @@ if __name__ == "__main__":
     # 터미널에서 인자를 받기 위한 설정
     # 메인 함수 실행
     article_content="""
-인공지능 기술이 빠르게 발전하면서 우리 사회의 많은 부분이 변화하고 있습니다.
- 특히 딥러닝 기술은 이미지 인식과 자연어 처리 분야에서 혁신을 이끌고 있습니다.
-"""
+        인공지능 기술이 빠르게 발전하면서 우리 사회의 많은 부분이 변화하고 있습니다.
+        특히 딥러닝 기술은 이미지 인식과 자연어 처리 분야에서 혁신을 이끌고 있습니다.
+    """
     result = generate_titles(article_content=article_content)
 
     # 결과값을 예쁘게 출력

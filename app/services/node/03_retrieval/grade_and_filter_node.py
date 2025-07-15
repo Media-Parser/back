@@ -23,7 +23,7 @@ def grade_and_filter_node(state: GraphState) -> GraphState:
         print("❌ 평가할 문서가 없습니다.")
         return {"documents": []}
 
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+    llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
     useful_docs = []
     
     print("문서 평가 시작:")

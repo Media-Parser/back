@@ -6,13 +6,7 @@ from app.core.config import settings
 
 load_dotenv()
 
-from app.routes import auth
-from app.routes import documents
-from app.routes import trash
-from app.routes import user
-from app.routes import category
-from app.routes import chat
-from app.routes import ai
+from app.routes import auth, documents, trash, user, category, chat, ai, analyze
 
 app = FastAPI()
 
@@ -32,3 +26,4 @@ app.include_router(user.router)
 app.include_router(category.router)
 app.include_router(chat.router)
 app.include_router(ai.router)
+app.include_router(analyze.router)

@@ -1,4 +1,5 @@
 # service/node/03_context/detect_chage.py
+
 import hashlib
 from typing import List, Dict, Any
 from textwrap import dedent
@@ -108,8 +109,7 @@ if __name__ == "__main__":
     manager.load_document(initial_document, max_chunk_size=80)
 
     # 2. 긴 줄의 중간 부분만 수정한 문서를 준비
-    modified_document = """
-        첫 번째 줄은 짧습니다.
+    modified_document = """첫 번째 줄은 짧습니다.
         두 번째 줄은 아주 깁니다. 이 줄은 설정된 최대 청크 크기인 80자를 초과하므로, 로드될 때 여러 개의 작은 청크로 바뀌어서 테스트되어야 합니다. 이 부분이 핵심 테스트 포인트입니다.
         세"""
 

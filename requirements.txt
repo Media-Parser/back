@@ -1,14 +1,64 @@
-fastapi
-uvicorn
-python-dotenv
-requests
+# requirements.txt
+
+# FastAPI 서버 & 환경변수 관리
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+python-dotenv>=1.0.0
 python-multipart
-motor
-# "pydantic[email]"
-python-magic
+requests
 httpx
-openai
-pymongo
-email-validator
+
+# MongoDB 연동
+motor
+pymongo>=4.6.0
+
+# Auth & Validation
 python-jose
 PyJWT
+email-validator
+bcrypt
+passlib
+
+# 파일 및 데이터 처리
+python-magic
+python-magic-bin
+tqdm>=4.0.0
+
+# OpenAI, LLM, LangChain/Graph
+openai>=1.0.0
+langchain>=0.2.0
+langgraph>=0.0.38
+langchain_openai>=0.1.0
+langchain_community
+huggingface_hub
+transformers
+torch
+accelerate
+
+# 벡터스토어
+chromadb>=0.4.24
+
+# 자연어처리
+langdetect
+kss
+nltk
+mecab-python3
+konlpy
+python-mecab-ko
+
+# Pydantic
+pydantic>=2.0.0
+# pydantic[email] 옵션 필요한 경우 아래 주석 해제
+# pydantic[email]>=2.0.0
+
+# 테스트 및 개발 도구
+pytest
+pytest-asyncio
+black
+
+# (옵션) Transformers/PEFT 등 Exaone SLM/QLoRA 관련
+# transformers>=4.38.0
+# peft>=0.10.0
+
+# (옵션) LangSmith 추적
+# langsmith>=0.1.0

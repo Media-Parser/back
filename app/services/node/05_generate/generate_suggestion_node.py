@@ -1,4 +1,5 @@
 # service/node/05_generate/generate_suggestion_node.py
+
 import os
 import re
 from typing import TypedDict, Optional
@@ -58,7 +59,7 @@ def generation_suggestion_node(state: GraphState) -> dict:
 
     try:
         completion = openai_client.chat.completions.create(
-            model="gpt-3.5-turbo",  # 이런 작업은 gpt-3.5-turbo 보다 gpt-4o-mini가 훨씬 더 잘합니다.
+            model="gpt-4o-mini",  # 이런 작업은 gpt-4o-mini 보다 gpt-4o-mini가 훨씬 더 잘합니다.
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}

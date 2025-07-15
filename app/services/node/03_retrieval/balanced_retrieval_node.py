@@ -1,4 +1,5 @@
-# service/node/04_retrieval/balanced_retrieval_node.py
+# service/node/03_retrieval/balanced_retrieval_node.py
+
 import os
 from typing import List, Dict, Any
 from langchain_community.vectorstores import Chroma
@@ -73,7 +74,7 @@ def balanced_retrieval_node(state: GraphState) -> GraphState:
     documents = retriever.invoke(rewritten_question)
 
     print(f"✅ 'balanced' 전략으로 {len(documents)}개의 문서를 검색했습니다.")
-    return {"documents": documents}
+    return {**state, "documents": documents}
 
 
 # --- 이 노드를 단독으로 실행하기 위한 코드 ---

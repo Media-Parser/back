@@ -1,15 +1,15 @@
 # app/services/chat_service.py
 
-import os
 import re
 from datetime import datetime, timedelta, timezone
 from typing import Optional, List
 
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.models.chat_model import ChatSendRequest
+from app.core.config import Settings
 
 # MongoDB 설정
-ATLAS_URI = os.getenv("ATLAS_URI")
+ATLAS_URI = Settings.ATLAS_URI
 client = AsyncIOMotorClient(ATLAS_URI)
 db = client['uploadedbyusers']
 collection = db['chat_qas']
@@ -77,12 +77,12 @@ def split_apply_value(apply_value: Optional[str]):
 def extract_apply_info(answer: str, question: ChatSendRequest, doc_contents: str):
     md_titles = re.findall(r'-\s*([^\n]+)', answer)
     if md_titles:
-        return md_titles[0].strip(), "title", None, None
+        return md_titles[0].strip(), "title"
 
     lines = [line.strip() for line in answer.split('\n') if line.strip()]
     titles = [line for line in lines if not line.startswith("추천 기사 제목은") and len(line) > 3]
     if titles:
-        return titles[0], "title", None, None
+        return titles[0], "title"
 
     m = re.findall(r'-\s*([^\n]+)', answer)
     if m:
@@ -97,7 +97,7 @@ def extract_apply_info(answer: str, question: ChatSendRequest, doc_contents: str
     if titles:
         return titles[0], "title", None, None
 
-    return None, None, None, None
+    return None, None
 
 
 # ===== 주요 기능 =====
@@ -110,7 +110,7 @@ async def save_chat_qa(
     doc_contents: Optional[str] = None,
 ) -> dict:
     chat_id = await get_next_chat_id()
-    apply_value, value_type, apply_start_index, apply_end_index = extract_apply_info(
+    apply_value, value_type = extract_apply_info(
         answer, question, doc_contents or ""
     )
     apply_title, apply_body = split_apply_value(apply_value)
@@ -125,8 +125,6 @@ async def save_chat_qa(
         "apply_title": apply_title,
         "apply_body": apply_body,
         "type": value_type,
-        "start_index": apply_start_index,
-        "end_index": apply_end_index,
         "created_dt": datetime.now(tz=tz_kst),
     }
     await collection.insert_one(qa)

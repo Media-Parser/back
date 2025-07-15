@@ -77,7 +77,7 @@ async def update_document_title(doc_id: str, new_title: str) -> bool:
 
 async def download_file(document_id: str):
     doc = await temp_collection.find_one({"doc_id": document_id}) or \
-          await collection.find_one({"doc_id": document_id})
+        await collection.find_one({"doc_id": document_id})
     if doc:
         doc.pop("_id", None)
     return doc
