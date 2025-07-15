@@ -5,7 +5,9 @@ import os
 import pandas as pd
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-MODEL_PATH = os.path.abspath(os.path.join(BASE_DIR, "../ai/finetuned_exaone"))  # 파인튜닝 후 경로
+MODEL_PATH = os.path.abspath(os.path.join(BASE_DIR, "../ai/finetuned_exaone"))
+
+print("MODEL_PATH:", MODEL_PATH)
 
 LABEL_EXPLANATIONS = {
     "프레이밍": "논란이 될만한 워딩, 의도적 프레이밍",
@@ -22,10 +24,10 @@ LABEL_EXPLANATIONS = {
     "욕설": "명백한 욕설/비속어"
 }
 
-print("EXAONE MODEL_PATH:", MODEL_PATH)
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
-model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH)
+# 아직 파인튜닝 모델 없음
+# tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH, trust_remote_code=True)
+# model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH, trust_remote_code=True)
 
 # 파인튜닝 train.csv에서 매핑 테이블 생성
 CSV_PATH = os.path.abspath(os.path.join(BASE_DIR, "../finetune/train.csv"))
@@ -34,21 +36,33 @@ highlight_map = {}  # (문장, 라벨) -> 문제부분
 for _, row in df.iterrows():
     highlight_map[(row["sentence"], row["label"])] = row["problematic"]
 
+# def run_exaone_batch(sentences):
+#     results = []
+#     for sent in sentences:
+#         inputs = tokenizer(sent, return_tensors="pt", truncation=True, padding=True, max_length=128)
+#         with torch.no_grad():
+#             outputs = model(**inputs)
+#             pred = outputs.logits.argmax(dim=-1).item()
+#             id2label = model.config.id2label
+#             label = id2label[str(pred)] if isinstance(pred, int) else id2label[pred]
+#             explanation = LABEL_EXPLANATIONS.get(label, "")
+#             problematic = highlight_map.get((sent, label), "")  # (문장, 라벨)에 맞는 하이라이트 반환
+#         results.append({
+#             "sentence": sent,
+#             "label": label,
+#             "problematic": problematic,    # 문제 부분(하이라이트)
+#             "explanation": explanation     # 라벨 설명
+#         })
+#     return results
+
 def run_exaone_batch(sentences):
-    results = []
-    for sent in sentences:
-        inputs = tokenizer(sent, return_tensors="pt", truncation=True, padding=True, max_length=128)
-        with torch.no_grad():
-            outputs = model(**inputs)
-            pred = outputs.logits.argmax(dim=-1).item()
-            id2label = model.config.id2label
-            label = id2label[str(pred)] if isinstance(pred, int) else id2label[pred]
-            explanation = LABEL_EXPLANATIONS.get(label, "")
-            problematic = highlight_map.get((sent, label), "")  # (문장, 라벨)에 맞는 하이라이트 반환
-        results.append({
+    # 아직 파인튜닝 모델 없음
+    return [
+        {
             "sentence": sent,
-            "label": label,
-            "problematic": problematic,    # 문제 부분(하이라이트)
-            "explanation": explanation     # 라벨 설명
-        })
-    return results
+            "label": "미지원",
+            "problematic": "",
+            "explanation": "파인튜닝된 모델이 아직 준비되지 않았습니다."
+        }
+        for sent in sentences
+    ]
