@@ -35,7 +35,8 @@ class ChatQA(BaseModel):
     selection: Optional[str] = None
     answer: str
     suggestion: Optional[str] = None
-    apply_value: Optional[str] = None
+    apply_title: Optional[str] = None
+    apply_body: Optional[str] = None 
     type: Optional[str] = None
     created_dt: datetime
 

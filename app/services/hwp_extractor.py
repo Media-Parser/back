@@ -5,8 +5,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 JAR_PATH = os.path.join(BASE_DIR, "python-hwplib-main", "hwplib-1.1.8.jar")
 LOADER_PATH = os.path.join(BASE_DIR, "python-hwplib-main", "hwp_loader.py")
 
-print("LOADER_PATH:", LOADER_PATH)
-print("JAR_PATH:", JAR_PATH)
+# print("LOADER_PATH:", LOADER_PATH)
+# print("JAR_PATH:", JAR_PATH)
 
 def extract_text_from_hwp(file_bytes: bytes) -> str:
     import tempfile

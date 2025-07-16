@@ -20,7 +20,7 @@ router = APIRouter(prefix="/documents", tags=["Documents"], dependencies=[Depend
 # ======================== 대시보드 ========================
 
 # 문서 목록 조회 API
-@router.get("/")    # ★ response_model=List[Doc] 제거
+@router.get("/")
 async def list_documents(user_id: str = Query(...)):
     try:
         docs = await get_documents(user_id)
@@ -29,7 +29,7 @@ async def list_documents(user_id: str = Query(...)):
         return docs
     except Exception as e:
         print("문서조회 에러:", e)
-        return []
+        raise HTTPException(status_code=500, detail=str(e))
 
 # 문서 제목 변경 API
 @router.patch("/title/{doc_id}")

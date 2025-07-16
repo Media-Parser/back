@@ -22,6 +22,8 @@ async def chat_send(req: ChatSendRequest):
         selected_text=req.selected_text if req.selected_yn else None,
         use_full_document=not req.selected_yn  # 선택된 텍스트가 없으면 전체 문서 사용
     )
+    print("[chat_send] AI 응답:", ai_answer)
+    print("[chat_send] Suggestion:", ai_suggestion)
     
     # 채팅 QA 저장
     chat_qa = await save_chat_qa(req, ai_answer, ai_suggestion)
