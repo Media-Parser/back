@@ -20,21 +20,18 @@ tz_kst = timezone(timedelta(hours=9))
 
 # ===== 공통 유틸 =====
 
-def build_next_chat_id(current_id: Optional[str]) -> str:
-    if current_id:
-        match = re.search(r"chat_(\d{8})", current_id)
+async def get_next_chat_id(doc_id: str):
+    # 해당 doc_id에서 chat_id 중 가장 큰 값을 찾음
+    latest = await collection.find_one(
+        {"doc_id": doc_id, "chat_id": {"$regex": "^chat_\\d{8}$"}},
+        sort=[("chat_id", -1)]
+    )
+    if latest and "chat_id" in latest:
+        match = re.search(r"chat_(\d{8})", latest["chat_id"])
         next_number = int(match.group(1)) + 1 if match else 1
     else:
         next_number = 1
     return f"chat_{next_number:08d}"
-
-async def get_next_chat_id():
-    latest = await collection.find_one(
-        {"chat_id": {"$regex": "^chat_\\d{8}$"}},
-        sort=[("chat_id", -1)]
-    )
-    current_id = latest["chat_id"] if latest else None
-    return build_next_chat_id(current_id)
 
 def convert_chat_qa(doc: dict) -> dict:
     result = {}
@@ -109,7 +106,7 @@ async def save_chat_qa(
     suggestion: Optional[str] = None,
     doc_contents: Optional[str] = None,
 ) -> dict:
-    chat_id = await get_next_chat_id()
+    chat_id = await get_next_chat_id(question.doc_id)
     apply_value, value_type = extract_apply_info(
         answer, question, doc_contents or ""
     )

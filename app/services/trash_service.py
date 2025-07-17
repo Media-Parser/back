@@ -11,7 +11,10 @@ from motor.motor_asyncio import AsyncIOMotorClient
 ATLAS_URI = os.getenv("ATLAS_URI")
 client = AsyncIOMotorClient(ATLAS_URI)
 db = client['uploadedbyusers']
+
 collection = db['docs']
+temp_collection = db['temp_docs']
+chat_collection = db['chat_qas']
 
 # 상수
 DELETE_YES = "y"
@@ -67,9 +70,15 @@ async def restore_document(document_id: str) -> bool:
 # 휴지통에서 개별 문서 영구 삭제
 async def delete_document_permanently(document_id: str) -> bool:
     try:
+        # 1. 본문(doc) 영구 삭제
         result = await collection.delete_one(
             {"doc_id": document_id, "delete_yn": DELETE_YES}
         )
+        # 2. 임시 문서(temp_docs) 영구 삭제
+        await temp_collection.delete_one({"doc_id": document_id})
+        # 3. 채팅기록(chat_qas) 영구 삭제
+        await chat_collection.delete_many({"doc_id": document_id})
+        
         print(f"[삭제 요청] doc_id={document_id} | matched={result.raw_result.get('n')} | deleted={result.deleted_count}")
         return result.deleted_count > 0
     except Exception as e:
@@ -80,7 +89,17 @@ async def delete_document_permanently(document_id: str) -> bool:
 # 휴지통 전체 문서 영구 삭제
 async def delete_all_deleted_documents() -> int:
     try:
+        # 휴지통에 있는 모든 문서 id 목록 가져오기
+        docs_cursor = collection.find({"delete_yn": DELETE_YES})
+        docs_raw = await docs_cursor.to_list(length=None)
+        doc_ids = [doc["doc_id"] for doc in docs_raw]
+        
+        # 1. docs 컬렉션에서 영구 삭제
         result = await collection.delete_many({"delete_yn": DELETE_YES})
+        # 2. temp_docs, chat_qas 컬렉션에서 모두 삭제
+        await temp_collection.delete_many({"doc_id": {"$in": doc_ids}})
+        await chat_collection.delete_many({"doc_id": {"$in": doc_ids}})
+        
         print(f"[전체 삭제] deleted_count={result.deleted_count}")
         return result.deleted_count
     except Exception as e:

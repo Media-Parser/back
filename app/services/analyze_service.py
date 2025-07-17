@@ -66,8 +66,8 @@ async def run_exaone(sentences: List[str]) -> List[SentenceAnalysis]:
                 index=idx,
                 text=sent,
                 flag=result.get("flag", False),
-                highlighted=result.get("highlighted", []),
-                explanation=result.get("explanation", []),
+                highlighted=result.get("highlighted") if isinstance(result.get("highlighted"), list) else [],
+                explanation=result.get("explanation") if isinstance(result.get("explanation"), list) else [],
             )
         )
     print(f"[LOG] 파싱된 결과: {results}")

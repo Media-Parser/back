@@ -8,6 +8,8 @@ from datetime import datetime, timedelta, timezone
 from fastapi import HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.models.document_model import Doc
+from app.services.hwp_extractor import extract_text_from_hwp
+from app.services.hwpx_extractor import extract_text_from_hwpx
 
 # ====== 설정 ======
 ATLAS_URI = os.getenv("ATLAS_URI")
@@ -94,10 +96,30 @@ async def delete_file(document_id: str):
 
 async def upload_file(file: Doc):
     file_dict = file.model_dump()
+    
+    # ⬇️ 1. 텍스트 추출
+    contents = ""
+    
+    try:
+        if file.file_type == "hwp":
+            contents = extract_text_from_hwp(file.file_blob)
+        elif file.file_type == "hwpx":
+            contents = extract_text_from_hwpx(file.file_blob)
+        else:
+            print(f"[upload_file] 지원되지 않는 파일 타입: {file.file_type}")
+    except Exception as e:
+        print(f"[upload_file] 파일 파싱 실패: {e}")
+        contents = ""
+
+    # ⬇️ 2. contents 필드에 저장
+    file_dict["contents"] = contents
+
+    # ⬇️ 3. MongoDB에 저장
     result = await collection.insert_one(file_dict)
     if result.inserted_id:
         return {"message": "Doc registered successfully", "doc_id": file_dict["doc_id"]}
     return {"message": "Failed to register doc"}
+
 
 
 # ======================== 챗봇 ========================

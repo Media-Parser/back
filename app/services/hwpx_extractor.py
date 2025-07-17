@@ -22,7 +22,7 @@ def extract_text_from_hwpx(file_bytes: bytes) -> str:
     try:
         # 1. text=True, encoding="utf-8" 제거!
         result = subprocess.run(
-            ["python", LOADER_PATH, "--hwpx_jar_path", JAR_PATH, "--file_path", tmp_path, "--output", out_path],
+            ["python3", LOADER_PATH, "--hwpx_jar_path", JAR_PATH, "--file_path", tmp_path, "--output", out_path],
             capture_output=True
         )
         # 2. 실패시 stderr만 "바이트로" 출력(참고)
