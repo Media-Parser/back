@@ -34,15 +34,10 @@ import os
 from typing import Dict, Optional
 
 from dotenv import load_dotenv
-from langchain_mongodb import MongoDBChatMessageHistory
-from langchain.memory import ConversationSummaryBufferMemory
 from langchain_openai import ChatOpenAI
 from chat_service import get_chat_history, save_chat_qa
 from app.models.chat_model import ChatSendRequest, ChatQA, ChatHistory
 from typing import Dict, Optional, Any, Literal
-
-from dotenv import load_dotenv
-from langchain_mongodb import MongoDBChatMessageHistory
 from langchain.memory import ConversationSummaryBufferMemory, ConversationBufferMemory
 from langchain_openai import ChatOpenAI
 
@@ -82,14 +77,6 @@ class ContextManager:
     ) -> None:
         self.session_id = session_id
         self.memory_type = memory_type
-
-        # Mongo 기반 메시지 저장소 (메모리 용도)
-        self.chat_history = MongoDBChatMessageHistory(
-            connection_string=_mongo_uri(),
-            session_id=session_id,
-            database_name="chat_history",
-            collection_name="message_store",
-        )
 
         # 메모리 타입 선택
         if memory_type == "summary":
