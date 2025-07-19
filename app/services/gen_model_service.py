@@ -2,15 +2,26 @@
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from app.services.prompt import build_prompt
 from app.utils.parse import parse_generated_output
-
+import sys
 import torch
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODEL_PATH = os.path.join(BASE_DIR, "ai", "finetuned_seq2seq_final")
+# --- 경로 설정 ---
+current_file_dir = os.path.dirname(os.path.abspath(__file__))
+services_dir = current_file_dir
+app_dir = os.path.dirname(services_dir)
+ssami_back_dir = os.path.dirname(app_dir)
+ssami_dir = os.path.dirname(ssami_back_dir)
+HOME_DIR = os.path.dirname(ssami_dir)
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
-model = AutoModelForSeq2SeqLM.from_pretrained(MODEL_PATH)
+if HOME_DIR not in sys.path:
+    sys.path.append(HOME_DIR)
+
+# --- 모델 및 데이터 경로 설정 ---
+MODEL_PATH = os.path.join(HOME_DIR, "ai", "finetuned_seq2seq_final")
+
+tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH, local_files_only=True)
+model = AutoModelForSeq2SeqLM.from_pretrained(MODEL_PATH, local_files_only=True)
 model.eval()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
