@@ -12,52 +12,57 @@ from app.services.exaone_client import run_exaone_batch
 
 nltk.download('punkt', quiet=True)
 
-# 언어 감지 후 KSS/EN/기타 구분하여 문장 분리
 def smart_sentence_split(text: str):
-    lang = detect(text)
-    print(f"[LOG] 감지된 언어: {lang}")
-    if lang == "ko":
-        return kss.split_sentences(text)
-    elif lang == "en":
-        return sent_tokenize(text)
-    else:
-        print(f"[LOG] 분리된 문장: {text}")
-        return [text]
+    try:
+        lang = detect(text)
+        print(f"[LOG] 감지된 언어: {lang}")
+        if lang == "ko":
+            # 1. 먼저 줄바꿈(\n)을 기준으로 텍스트를 나눕니다.
+            lines = text.splitlines()
+            all_sentences = []
+            # 2. 나눠진 각 줄에 대해 kss로 다시 문장 분리를 수행합니다.
+            for line in lines:
+                if line.strip(): # 비어있는 줄은 무시합니다.
+                    all_sentences.extend(kss.split_sentences(line))
+            return all_sentences
+        elif lang == "en":
+            return sent_tokenize(text)
+        else:
+            return [text]
+    except Exception:
+        # langdetect가 비어 있거나 너무 짧은 텍스트에 대해 오류를 발생시킬 수 있음
+        return text.splitlines()
 
 ATLAS_URI = Settings.ATLAS_URI
 client = AsyncIOMotorClient(ATLAS_URI)
 db = client['uploadedbyusers']
 
-# 해시 생성 함수
+"""
+분석 결과 저장을 위한 별도 컬렉션 지정
+"""
+analysis_collection = db["analysis_cache"]
+
 def hash_sentence(text):
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
-# 이전 분석 결과 가져오기
 async def get_prev_analysis(doc_id: str) -> List[Dict]:
-    # 1. temp_docs에서 먼저 찾기
-    doc = await db["temp_docs"].find_one({"doc_id": doc_id})
+    doc = await analysis_collection.find_one({"doc_id": doc_id})
     if doc and "sentence_analysis" in doc:
         return doc["sentence_analysis"]
-    # 2. 없으면 docs에서 찾기
-    doc = await db["docs"].find_one({"doc_id": doc_id})
-    if doc and "sentence_analysis" in doc:
-        return doc["sentence_analysis"]
-    # 3. 둘 다 없으면 빈 리스트
     return []
 
-# 분석 결과 저장
 async def save_analysis(doc_id: str, analysis: List[SentenceAnalysis]):
-    await db["temp_docs"].update_one(
+    await analysis_collection.update_one(
         {"doc_id": doc_id},
         {"$set": {"sentence_analysis": [a.model_dump() for a in analysis]}},
         upsert=True,
     )
 
-# EXAONE 결과 처리
-async def run_exaone(sentences: List[str]) -> List[SentenceAnalysis]:
+def process_exaone_results(sentences: List[str]) -> List[SentenceAnalysis]:
     print(f"[LOG] EXAONE 요청 문장 목록: {sentences}")
     batch_results = run_exaone_batch(sentences)
     print(f"[LOG] EXAONE 응답: {batch_results}")
+    
     results = []
     for idx, (sent, result) in enumerate(zip(sentences, batch_results)):
         print(f"[LOG] 모델 raw 응답 ({idx}): {result}")
@@ -66,35 +71,47 @@ async def run_exaone(sentences: List[str]) -> List[SentenceAnalysis]:
                 index=idx,
                 text=sent,
                 flag=result.get("flag", False),
-                highlighted=result.get("highlighted") if isinstance(result.get("highlighted"), list) else [],
-                explanation=result.get("explanation") if isinstance(result.get("explanation"), list) else [],
+                label=result.get("label", "문제 없음"),
+                highlighted=result.get("highlighted", []),
+                explanation=result.get("explanation", []),
             )
         )
     print(f"[LOG] 파싱된 결과: {results}")
     return results
 
-# 문서 전체 분석
 async def analyze_document(doc_id: str, contents: str) -> List[SentenceAnalysis]:
+    if not contents or not contents.strip():
+        return []
+        
     sentences = smart_sentence_split(contents)
-    prev = await get_prev_analysis(doc_id)
-    prev_hashes = [hash_sentence(s["text"]) for s in prev]
-    new_hashes = [hash_sentence(s) for s in sentences]
-
-    to_analyze = []
-    for i, h in enumerate(new_hashes):
-        if i >= len(prev_hashes) or h != prev_hashes[i]:
-            to_analyze.append((i, sentences[i]))
-
-    updated = await run_exaone([x[1] for x in to_analyze])
-
-    analysis = []
-    upd_idx = 0
+    prev_analysis_list = await get_prev_analysis(doc_id)
+    
+    final_analysis: List[SentenceAnalysis] = [None] * len(sentences)
+    prev_map = {hash_sentence(s["text"]): s for s in prev_analysis_list}
+    
+    sentences_to_analyze_map = {}
+    
     for i, s in enumerate(sentences):
-        if i < len(prev_hashes) and new_hashes[i] == prev_hashes[i]:
-            analysis.append(SentenceAnalysis(**prev[i]))
+        h = hash_sentence(s)
+        if h in prev_map:
+            cached_data = prev_map[h]
+            cached_data['index'] = i
+            final_analysis[i] = SentenceAnalysis(**cached_data)
         else:
-            analysis.append(updated[upd_idx])
-            upd_idx += 1
-
-    await save_analysis(doc_id, analysis)
-    return analysis
+            sentences_to_analyze_map[i] = s
+            
+    if sentences_to_analyze_map:
+        indices_to_analyze = list(sentences_to_analyze_map.keys())
+        texts_to_analyze = list(sentences_to_analyze_map.values())
+        
+        updated_results = process_exaone_results(texts_to_analyze)
+        
+        for i, analysis_result in enumerate(updated_results):
+            original_index = indices_to_analyze[i]
+            analysis_result.index = original_index
+            final_analysis[original_index] = analysis_result
+            
+    final_analysis = [res for res in final_analysis if res is not None]
+    
+    await save_analysis(doc_id, final_analysis)
+    return final_analysis
