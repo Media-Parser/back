@@ -1,5 +1,3 @@
-# service/node/04_retrieval/standard_retrieval_node.py
-
 from datetime import datetime
 from dotenv import load_dotenv
 from langchain_core.documents import Document
@@ -25,7 +23,7 @@ def date_to_int(date_str: str) -> int | None:
     except (ValueError, TypeError):
         return None
 
-# --- 최종 검색 노드 함수 ---
+# --- 검색 노드 함수 ---
 def standard_retrieval_node(state: GraphState) -> GraphState:
     """
     메타데이터 필터링과 함께 유사도 점수를 포함하여 문서를 검색합니다.
@@ -46,7 +44,7 @@ def standard_retrieval_node(state: GraphState) -> GraphState:
 
     filter_conditions = []
 
-    # 날짜 범위 필터링 (date_int 사용)
+    # 1. 날짜 범위 필터링 (date_int 사용)
     start_date_int = date_to_int(filters.get("startdate"))
     if start_date_int is not None:
         filter_conditions.append({'date_int': {'$gte': start_date_int}})
@@ -55,42 +53,48 @@ def standard_retrieval_node(state: GraphState) -> GraphState:
     if end_date_int is not None:
         filter_conditions.append({'date_int': {'$lte': end_date_int}})
     
-    # 토픽 필터링
-    topic_filter = filters.get("topic")
-    if topic_filter:
-        filter_conditions.append({'topic': {'$eq': topic_filter}})
+    # # 2. 토픽 필터링 추가 해야돼!!
+    # topic_filter = filters.get("topic")
+    # if topic_filter:
+    #     filter_conditions.append({'topic': {'$eq': topic_filter}})
 
-    search_filter = {}
+    # 3. 데이터 타입 필터링 (복수 선택 허용)
+    data_types = plan.get("data_type")
+    if data_types and isinstance(data_types, list) and len(data_types) > 0:
+        filter_conditions.append({'data_type': {'$in': data_types}})
+
+    # 4. 최종 필터 조합
     if len(filter_conditions) > 1:
         search_filter = {"$and": filter_conditions}
     elif len(filter_conditions) == 1:
         search_filter = filter_conditions[0]
+    else:
+        search_filter = {}
 
     print(f"🔍 검색 필터: {search_filter}")
     
-    # *** 핵심 수정 부분: retriever.invoke 대신 similarity_search_with_relevance_scores 사용 ***
+    # 5. 유사도 점수 포함 검색
     docs_with_scores = vectorstore.similarity_search_with_relevance_scores(
         query=rewritten_question,
         k=k,
         filter=search_filter
     )
 
-    print(f"✅ 'advanced' 전략으로 {len(docs_with_scores)}개의 문서를 검색했습니다.")
-    # 노드의 출력 상태 이름도 명확하게 변경
+    print(f"✅ 검색된 문서 수 (with relevance scores): {len(docs_with_scores)}")
     return {"docs_with_scores": docs_with_scores}
 
 
-
-# --- 이 노드를 단독으로 실행하기 위한 코드 ---
+# --- 단독 테스트 실행 ---
 if __name__ == '__main__':
-    # 1. 입력 상태(State) 정의
     input_state = GraphState({
         "plan": {
             "strategy": "standard_retrieval",
             "rewritten_question": "부동산 정책",
             "filters": {
                 "startdate": "2024-03-01",
-                "enddate": "2024-03-31",
+                "enddate": "2025-03-31",
+                # "topic": "부동산",
+                "data_type": ["opinion"]
             },
             "parameters": {"k": 5}
         },
@@ -98,13 +102,11 @@ if __name__ == '__main__':
         "original_question": ""
     })
 
-    # 2. 노드 함수 실행
-    retrieval_result = standard_retrieval_node(input_state)
+    result = standard_retrieval_node(input_state)
 
-    # 3. 결과 확인
-    print("\n--- 노드 실행 결과 (검색된 문서) ---")
-    if retrieval_result.get("documents"):
-        for doc in retrieval_result["documents"]:
-            print(f"- 내용: {doc.page_content}, \n  메타데이터: {doc.metadata}\n")
+    print("\n--- 🔍 검색 결과 ---")
+    if result.get("docs_with_scores"):
+        for doc, score in result["docs_with_scores"]:
+            print(f"🧠 Score: {score:.3f}\n📄 내용: {doc.page_content}\n📌 메타데이터: {doc.metadata}\n")
     else:
-        print("검색된 문서가 없습니다.")
+        print("❌ 검색된 문서가 없습니다.")

@@ -1,5 +1,3 @@
-# service/node/05_generate/generate_title_node.py
-
 import json
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -15,16 +13,7 @@ load_dotenv()
 # 설정된 환경 변수(OPENAI_API_KEY)를 자동으로 사용합니다.
 client = OpenAI()
 
-
-class GraphState(TypedDict, total=False):
-    question: str
-    original_question: str
-    plan: Optional[dict]
-    documents: List[Document]
-    generation: str
-    context: str
-    doc_id: Optional[str]
-    apply_title: Optional[str]
+from graph_state import GraphState
 
 def generate_titles(
     article_content: str,
@@ -55,11 +44,11 @@ def generate_titles(
 
     반드시 아래와 같은 JSON 형식으로만 응답해야 합니다:
     {{
-        "titles": [
-            "생성된 첫 번째 제목",
-            "생성된 두 번째 제목",
-            ...
-        ]
+      "titles": [
+        "생성된 첫 번째 제목",
+        "생성된 두 번째 제목",
+        ...
+      ]
     }}
 
     --- 기사 내용 ---
@@ -98,10 +87,9 @@ def generate_titles_node(state: GraphState) -> GraphState:
     결과를 state의 generation 필드에 맞게 변환하는 '연결용 노드'.
     """
     print("--- 노드 실행: generate_titles_node ---")
-    context = state["context"]
+    context = state["selected_text"]
+    print(context)
 
-    # 사용자가 질문과 본문을 "\n\n"으로 구분해 입력했다고 가정합니다.
-    # title_result는 리스트
     title_result = generate_titles(article_content=context)
 
     if "error" in title_result:
@@ -117,17 +105,3 @@ def generate_titles_node(state: GraphState) -> GraphState:
         "generation": generation,
         "apply_title": title_result.get("titles", [""])[0],  # 첫 번째 제목만
     }
-
-
-# 💡 이 파일이 단독으로 실행될 때만 아래 코드가 동작합니다.
-if __name__ == "__main__":
-    # 터미널에서 인자를 받기 위한 설정
-    # 메인 함수 실행
-    article_content="""
-        인공지능 기술이 빠르게 발전하면서 우리 사회의 많은 부분이 변화하고 있습니다.
-        특히 딥러닝 기술은 이미지 인식과 자연어 처리 분야에서 혁신을 이끌고 있습니다.
-    """
-    result = generate_titles(article_content=article_content)
-
-    # 결과값을 예쁘게 출력
-    print(json.dumps(result, indent=2, ensure_ascii=False))

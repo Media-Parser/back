@@ -1,22 +1,23 @@
 # app/services/ai_service.py
-
-import re
-from typing import Optional, List, Tuple
+from typing import Optional, Tuple
 from datetime import timedelta, timezone
-
-from openai import OpenAI
 from motor.motor_asyncio import AsyncIOMotorClient
-from app.core.config import Settings
+from openai import OpenAI
 from langgraph.graph import StateGraph, END
+from app.core.config import Settings
+import asyncio
+from app.services.chat_service import get_curr_chat_id
 from app.services.node import (
     GraphState,
     plan_retrieval_node,
     standard_retrieval_node,
     balanced_retrieval_node,
     grade_and_filter_node,
-    generate_response_node,
     generate_titles_node,
-    generate_suggestion_node,
+    generate_main_node,
+    load_context_node,
+    #save_context_node
+ #   load_chathistory_node
 )
 
 # ===== 설정 =====
@@ -26,33 +27,39 @@ db = client['uploadedbyusers']
 openai_client = OpenAI(api_key=Settings.OPENAI_API_KEY)
 tz_kst = timezone(timedelta(hours=9))
 
-
-# ===== 문서 조회 =====
-async def get_document_content(doc_id: str) -> Optional[dict]:
-    for coll in ["temp_docs", "docs"]:
-        doc = await db[coll].find_one({"doc_id": doc_id})
-        if doc:
-            return {
-                "title": doc.get("title", ""),
-                "contents": doc.get("contents", "")
-            }
-    return None
-
-
+# ===== 문서 조회 노드 =====
 async def retrieve_document_node(state: GraphState) -> dict:
     print("--- 노드 실행: retrieve_document_node ---")
     doc_id = state.get("doc_id")
     if not doc_id:
-        return {**state, "context": ""}
+        return {**state, "selected_text": ""}
 
-    doc = await db["temp_docs"].find_one({"doc_id": doc_id}) or await db["docs"].find_one({"doc_id": doc_id})
+    async def fetch(coll):
+        return await db[coll].find_one({"doc_id": doc_id})
+
+    temp_doc, main_doc = await asyncio.gather(fetch("temp_docs"), fetch("docs"))
+    doc = temp_doc or main_doc
+
     if not doc:
-        return {**state, "context": "오류: 해당 ID의 문서를 찾을 수 없습니다."}
+        return {**state}
 
-    context = f"[문서 제목]\n{doc.get('title', '')}\n\n[문서 내용]\n{doc.get('contents', '')}"
-    print(context)
-    return {**state, "context": context}
+    return {**state, "selected_text": doc.get("contents", "")}
 
+async def no_generate_node(state: GraphState) -> dict:
+    print("--- 노드 실행: no_generate_node ---")
+    generation_reason = "요청에 부적절한 표현이 포함되어 있어 응답 생성을 중단했습니다."
+    return {**state, "generation": generation_reason}  # ✨ 여기에 이유를 명시
+
+
+# ===== 조건 함수 =====
+async def should_load_document(state: GraphState) -> str:
+    return "retrieve_document" if state.get("use_full_document") else "plan_retrieval"
+
+
+async def should_continue_after_retrieval(state: GraphState) -> str:
+    if state.get("plan", {}).get("generation_required"):
+        return "generate"
+    return "__end__"
 
 
 async def should_retrieve_conditionally(state: GraphState) -> str:
@@ -61,57 +68,86 @@ async def should_retrieve_conditionally(state: GraphState) -> str:
         "standard_retrieval": "standard_retriever",
         "balanced_retrieval": "balanced_retriever",
         "title_generation": "generate_titles",
-        "no_retrieval": "generate"
+        "no_retrieval": "generate",
+        "generate": "generate",
+        "no_generate": "no_generate"
     }.get(strategy, "__end__")
+
+# ===== LangGraph 구성 =====
+def build_graph() -> StateGraph:
+    graph_builder = StateGraph(GraphState)
+
+    # 노드 등록
+    graph_builder.add_node("load_context", load_context_node)
+    graph_builder.add_node("retrieve_document", retrieve_document_node)
+    graph_builder.add_node("plan_retrieval", plan_retrieval_node)
+    graph_builder.add_node("standard_retriever", standard_retrieval_node)
+    graph_builder.add_node("balanced_retriever", balanced_retrieval_node)
+    graph_builder.add_node("grade_and_filter", grade_and_filter_node)
+    graph_builder.add_node("generate", generate_main_node)
+    graph_builder.add_node("generate_titles", generate_titles_node)
+    graph_builder.add_node("no_generate", no_generate_node)
+
+    # 그래프 흐름 정의
+    graph_builder.set_entry_point("load_context")
+    graph_builder.add_conditional_edges("load_context", should_load_document, {
+        "retrieve_document": "retrieve_document",
+        "plan_retrieval": "plan_retrieval"
+    })
+    graph_builder.add_edge("retrieve_document", "plan_retrieval")
+    graph_builder.add_conditional_edges("plan_retrieval", should_retrieve_conditionally, {
+        "standard_retriever": "standard_retriever",
+        "balanced_retriever": "balanced_retriever",
+        "generate_titles": "generate_titles",
+        "no_retrieval": "generate",
+        "generate":"generate",
+        "no_generate": "no_generate",
+        "__end__": END
+    })
+
+    graph_builder.add_edge("standard_retriever", "grade_and_filter")
+    graph_builder.add_edge("balanced_retriever", "grade_and_filter")
+    graph_builder.add_edge("grade_and_filter", "generate")
+    graph_builder.add_edge("generate", END)
+    graph_builder.add_edge("generate_titles", END)
+
+    return graph_builder.compile()
+
+# 그래프 객체 전역 1회 생성
+graph_app = build_graph()
 
 
 # ===== LangGraph 실행 =====
-# 히스토리 반영 안됨, content 제대로 안들어감
-async def generate_ai_response(message: str, doc_id: str, selected_text: Optional[str] = None, use_full_document: bool = False) -> Tuple[str, Optional[str]]:
+async def generate_ai_response(
+    message: str,
+    doc_id: str,
+    selected_text: Optional[str] = None,
+    use_full_document: bool = False
+) -> Tuple[str, Optional[str], Optional[str], Optional[str], Optional[str]]:
+
     try:
-        from chat_service import get_chat_history_for_prompt
-        chat_history = await get_chat_history_for_prompt(doc_id, limit=3)
-        doc_content = await get_document_content(doc_id) if use_full_document or not selected_text else None
+        chat_id = await get_curr_chat_id(doc_id)
+        print(f"chat_id:{chat_id}")
+        if not chat_id:
+            chat_id = "chat_00000001"
+        inputs = {
+            "question": message,
+            "doc_id": doc_id,
+            "chat_id": chat_id,
+            "selected_text": selected_text,
+            "use_full_document": use_full_document,
+        }
 
-        inputs = {"question": message, "original_question": message, "documents": [], "doc_id": doc_id}
-        config = {"configurable": {"run_id": f"run_{doc_id}"}}
+        config = {"configurable": {"run_id": f"run_{doc_id}_{chat_id}"}}
         final_state = await graph_app.ainvoke(inputs, config=config)
-        print(final_state)
-        answer = final_state.get("generation", "답변 생성 실패")
-        suggestion = generate_suggestion_node({"question": message}).get("suggestion")
-        return answer, suggestion
+
+        return (
+            final_state.get("generation", "답변 생성 실패"),
+            final_state.get("suggestion"),
+            final_state.get("apply_title"),
+            final_state.get("apply_body")
+        )
+
     except Exception as e:
-        return f"AI 응답 생성 중 오류가 발생했습니다: {str(e)}", None
-
-
-# ===== LangGraph 구성 =====
-graph_builder = StateGraph(GraphState)
-
-# 노드 등록
-graph_builder.add_node("retrieve_document", retrieve_document_node)
-graph_builder.add_node("plan_retrieval", plan_retrieval_node)
-graph_builder.add_node("standard_retriever", standard_retrieval_node)
-graph_builder.add_node("balanced_retriever", balanced_retrieval_node)
-graph_builder.add_node("grade_and_filter", grade_and_filter_node)
-graph_builder.add_node("generate", generate_response_node)
-graph_builder.add_node("generate_titles", generate_titles_node)
-graph_builder.add_node("generate_suggestion_node", generate_suggestion_node)
-
-# 엣지 연결
-graph_builder.set_entry_point("retrieve_document")
-graph_builder.add_edge("retrieve_document", "plan_retrieval")
-graph_builder.add_conditional_edges("plan_retrieval", should_retrieve_conditionally, {
-    "standard_retriever": "standard_retriever",
-    "balanced_retriever": "balanced_retriever",
-    "generate_titles": "generate_titles",
-    "generate": "generate",
-    "__end__": END
-})
-graph_builder.add_edge("standard_retriever", "grade_and_filter")
-graph_builder.add_edge("balanced_retriever", "grade_and_filter")
-graph_builder.add_edge("grade_and_filter", "generate")
-graph_builder.add_edge("generate", END)
-graph_builder.add_edge("generate_titles", END)
-
-# 그래프 컴파일
-graph_app = graph_builder.compile()
+        print(f"AI 응답 생성 중 오류: {str(e)}")
+        return f"AI 응답 생성 중 오류가 발생했습니다", None, None, None
