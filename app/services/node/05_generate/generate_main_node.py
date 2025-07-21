@@ -1,13 +1,12 @@
-# generate_main_node.py
 from typing import Optional
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers.openai_tools import PydanticToolsParser
+from graph_state import GraphState
 
 load_dotenv()
-from graph_state import GraphState
 
 # === LLM이 반환할 JSON 형식 정의 ===
 class GenMainOutput(BaseModel):
@@ -31,13 +30,13 @@ SYSTEM_PROMPT = """
 
 [출력 형식]
 반드시 다음 필드를 포함한 JSON 객체로 응답하세요:
-- generation: 응답 또는 수정 이유
+- generation: 응답
 - suggestion: 후속 제안
 - apply_body: (선택된 문서 부분에 대한 수정을 요청한 경우에만)
 """
 
 # === USER 프롬프트 ===
-USER_TEMPLATE = """
+USER_TEMPLATE_WITH_APPLY = """
 질문:
 {question}
 
@@ -55,48 +54,81 @@ USER_TEMPLATE = """
 }}
 """
 
+USER_TEMPLATE_SIMPLE = """
+질문:
+{question}
+
+이전까지의 대화 내용 요약:
+{context}
+
+선택된 문서 부분:
+{selected_text}
+"""
+
 def generate_main_node(state: GraphState) -> GraphState:
     print("--- 노드 실행: generate_main_node ---")
 
     question = state.get("question", "")
     selected_text = state.get("selected_text", "")
-    context = state.get("context", "")  # 반드시 history 기반 요약만
+    context = state.get("context", "")
+    apply_body_required = state.get("plan", {}).get("apply_body_required", False)
 
-    # documents 내용은 별도 변수에 저장 (명시적으로)
+    # 문서 연결
     document_context = ""
     if "documents" in state:
         documents = state["documents"]
         if isinstance(documents, list) and documents:
-            document_context = "\n\n".join([
-                f"[문서 {i+1}]\n{doc.page_content}" for i, doc in enumerate(documents)
-            ])
+            document_context = "\n\n".join(
+                [f"[문서 {i+1}]\n{doc.page_content}" for i, doc in enumerate(documents)]
+            )
 
-    # 프롬프트 구성
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", SYSTEM_PROMPT),
-        ("user", USER_TEMPLATE + (f"\n아래 문서는 외부 문서입니다. 이중 질문과 관련된 내용만 요약하거나 인용해서 사용하세요:\n\n{document_context}" if document_context else ""))
-    ])
-    print("document_context ", document_context)
+    # 프롬프트 설정
+    if apply_body_required:
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", SYSTEM_PROMPT),
+            ("user", USER_TEMPLATE_WITH_APPLY + (
+                f"\n아래 문서는 외부 문서입니다. 이중 질문과 관련된 내용만 요약하거나 인용해서 사용하세요:\n\n{document_context}" if document_context else ""
+            ))
+        ])
 
-    # LLM + Tool 설정
-    llm = ChatOpenAI(model="gpt-4o-mini").bind_tools(
-        [GenMainOutput],
-        tool_choice="GenMainOutput"
-    )
-    chain = prompt | llm | PydanticToolsParser(tools=[GenMainOutput])
+        llm = ChatOpenAI(model="gpt-4o-mini").bind_tools(
+            [GenMainOutput], tool_choice="GenMainOutput"
+        )
+        chain = prompt | llm | PydanticToolsParser(tools=[GenMainOutput])
 
-    # LLM 호출
-    result: GenMainOutput = chain.invoke({
-        "question": question,
-        "context": context,
-        "selected_text": selected_text or ""
-    })[0]
+        result: GenMainOutput = chain.invoke({
+            "question": question,
+            "context": context,
+            "selected_text": selected_text or ""
+        })[0]
 
-    new_state = {
-        **state,
-        "generation": result.generation,
-        "suggestion": result.suggestion,
-        "apply_body": result.apply_body or "",
-    }
+        return {
+            **state,
+            "generation": result.generation,
+            "suggestion": result.suggestion,
+            "apply_body": result.apply_body or "",
+        }
 
-    return new_state
+    else:
+        # apply_body가 필요 없는 경우
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", "당신은 언론 어시스턴트입니다.\n문서를 바탕으로 질문에 응답하고 후속 제안을 생성하세요."),
+            ("user", USER_TEMPLATE_SIMPLE + (
+                f"\n아래 문서는 외부 문서입니다. 이중 질문과 관련된 내용만 요약하거나 인용해서 사용하세요:\n\n{document_context}" if document_context else ""
+            ))
+        ])
+
+        llm = ChatOpenAI(model="gpt-4o-mini")
+        chain = prompt | llm
+        result = chain.invoke({
+            "question": question,
+            "context": context,
+            "selected_text": selected_text
+        })
+
+        return {
+            **state,
+            "generation": result.content.strip(),
+            "suggestion": None,
+            "apply_body": "",
+        }

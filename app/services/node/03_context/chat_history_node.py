@@ -14,11 +14,6 @@ MEMORY_POOL: Dict[str, ConversationSummaryMemory] = {}
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.2)
 
 
-def get_memory(doc_id: str) -> ConversationSummaryMemory:
-    if doc_id not in MEMORY_POOL:
-        MEMORY_POOL[doc_id] = ConversationSummaryMemory(llm=llm)
-    return MEMORY_POOL[doc_id]
-
 
 async def load_context_node(state: Dict[str, Any]) -> Dict[str, Any]:
     print("--- 노드 실행: load_context_node (LLM summary 기반) ---")
@@ -42,13 +37,20 @@ async def load_context_node(state: Dict[str, Any]) -> Dict[str, Any]:
 
         # LLM 요약 요청
         prompt = ChatPromptTemplate.from_messages([
-            ("system", """You are a conversation context assistant. From the conversation history, summarize only the information that is directly relevant to the current question. 
-        Include any user preferences or aversions if they can be inferred. 
-        However, strictly exclude any past interactions that contradict the current question or are unrelated. 
-        Also, do not include any part of the conversation where the answer generation failed. 
-        Returning an empty response is acceptable if nothing is relevant."""),
+            ("system", """You are a conversation context assistant.
+
+        Your task is to summarize only the information from the conversation history that is directly relevant to the current question. 
+        If user preferences or aversions are clearly inferred **and they are relevant to the question**, include them. 
+
+        Strictly **exclude**:
+        - Any information that contradicts the current question.
+        - Any irrelevant past interactions.
+        - Any parts of the conversation where answer generation failed.
+
+        If no relevant context exists, return an empty response."""),
             ("user", f"Current question: {question}\n\nPrevious conversation history:\n{history_text}")
         ])
+
 
         chain = prompt | llm
         summary = await chain.ainvoke({})
@@ -58,21 +60,6 @@ async def load_context_node(state: Dict[str, Any]) -> Dict[str, Any]:
         print("❌ load_context_node 오류:", e)
         return {**state, "context": ""}
 
-
-# def save_context_node(state: Dict[str, Any]) -> Dict[str, Any]:
-#     print("--- 노드 실행: save_context_node (summary_memory) ---")
-#     doc_id = state.get("doc_id")
-#     if not doc_id:
-#         print("❌ doc_id가 없어 context 저장을 건너뜁니다.")
-#         return state
-
-#     question = state.get("question", "")
-#     answer = state.get("generation", "")
-
-#     memory = get_memory(doc_id)
-#     memory.save_context({"input": question}, {"output": answer})
-
-#     return state
 
 
 async def save_chathistory_node(state: Dict[str, Any]) -> Dict[str, Any]:

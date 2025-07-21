@@ -107,7 +107,10 @@ def build_graph() -> StateGraph:
 
     graph_builder.add_edge("standard_retriever", "grade_and_filter")
     graph_builder.add_edge("balanced_retriever", "grade_and_filter")
-    graph_builder.add_edge("grade_and_filter", "generate")
+    graph_builder.add_conditional_edges("grade_and_filter", should_continue_after_retrieval, {
+    "generate": "generate",
+    "__end__": END
+    })
     graph_builder.add_edge("generate", END)
     graph_builder.add_edge("generate_titles", END)
 

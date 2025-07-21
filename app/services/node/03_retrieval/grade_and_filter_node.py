@@ -68,10 +68,15 @@ def grade_and_filter_node(state: GraphState) -> GraphState:
     question = state.get("question")
     documents = state.get("documents")
 
+    # 0. 혹시 Tuple(Document, score) 구조이면 Document만 추출
+    if documents and isinstance(documents[0], tuple):
+        print("📌 튜플 형식 문서 감지 → Document만 추출 중")
+        documents = [doc for doc, score in documents]
+
     if not documents:
         print("❌ 평가할 문서가 없습니다.")
         return {**state, "documents": [], "generation": "관련 문서를 찾을 수 없습니다."}
-
+    
     # 1. 문서 청킹
     chunked_docs = chunk_documents(documents)
     print(f"📦 총 {len(chunked_docs)}개 청크로 변환 완료.")

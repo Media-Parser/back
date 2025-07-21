@@ -88,7 +88,6 @@ def generate_titles_node(state: GraphState) -> GraphState:
     """
     print("--- 노드 실행: generate_titles_node ---")
     context = state["selected_text"]
-    print(context)
 
     title_result = generate_titles(article_content=context)
 
