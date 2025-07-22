@@ -1,5 +1,5 @@
-# app/models/analyze_model.py
-from typing import List, Optional
+# ✅ app/models/analyze_model.py
+from typing import List
 from pydantic import BaseModel, Field
 
 class SentenceAnalysis(BaseModel):

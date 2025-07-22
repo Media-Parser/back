@@ -145,10 +145,11 @@ async def get_doc_route(doc_id: str, current_user_id: str = Depends(get_current_
             except Exception:
                 contents = ""
     doc["contents"] = contents
-    
+    topic_id = doc.get("topic_id", 11)
+    hashtag = doc.get("hashtag", ["언니메롱","언니안녕","야호"])
     # [수정] file_blob 필드를 응답에서 제외
     doc.pop("file_blob", None)
-    return doc
+    return {**doc, "topic_id": topic_id, "hashtag":hashtag}
 
 @router.patch("/temp/{doc_id}")
 async def patch_temp_doc_route(doc_id: str, update_data: dict = Body(...), current_user_id: str = Depends(get_current_user)):
