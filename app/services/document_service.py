@@ -10,7 +10,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from app.models.document_model import Doc
 from app.services.hwp_extractor import extract_text_from_hwp
 from app.services.hwpx_extractor import extract_text_from_hwpx
-
+from app.services.doc_topic import embed_openai
 # ====== 설정 ======
 ATLAS_URI = os.getenv("ATLAS_URI")
 client = AsyncIOMotorClient(ATLAS_URI)

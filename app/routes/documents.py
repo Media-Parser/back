@@ -5,6 +5,7 @@ from app.services.document_service import (
     upload_file, get_next_doc_id, get_documents, download_file, delete_file,
     update_document_title, has_temp_doc, get_temp_doc, get_doc, update_temp_doc, finalize_temp_doc,delete_temp_doc
 )
+from app.services.doc_topic import get_topic_info_with_docs
 from app.models.document_model import Doc
 from typing import List, Optional, Dict
 from urllib.parse import quote
@@ -145,10 +146,11 @@ async def get_doc_route(doc_id: str, current_user_id: str = Depends(get_current_
             except Exception:
                 contents = ""
     doc["contents"] = contents
-    topic_id = doc.get("topic_id", 11)
-    hashtag = doc.get("hashtag", ["언니메롱","언니안녕","야호"])
     # [수정] file_blob 필드를 응답에서 제외
     doc.pop("file_blob", None)
+    print(contents)
+    topic_id, hashtag = get_topic_info_with_docs(contents)
+    print(topic_id)
     return {**doc, "topic_id": topic_id, "hashtag":hashtag}
 
 @router.patch("/temp/{doc_id}")

@@ -163,7 +163,7 @@ def run_exaone_batch(sentences: List[str]) -> List[Dict]:
                     final_explanation_list.append("비속어 감지: 텍스트에 부적절한 표현이 포함되어 있습니다.")
                 else:
                     # 모델 예측 라벨에 대한 설명을 LABEL_EXPLANATIONS에서 가져옴
-                    explanation_from_map = LABEL_EXPLANATIONS.get(final_label_name, "설명 없음")
+                    explanation_from_map = LABEL_EXPLANATIONS.get(final_label_name)
                     # ✅ 라벨 이름과 설명을 조합하여 explanation 리스트에 추가
                     final_explanation_list.append(f"{final_label_name}: {explanation_from_map}")
 
