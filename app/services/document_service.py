@@ -77,6 +77,12 @@ async def update_document_title(doc_id: str, user_id: str, new_title: str) -> bo
     )
     return result.modified_count > 0
 
+async def update_document_topic(doc_id: str, user_id: str, topic_id: int, hashtag: list) -> None:
+    await collection.update_one(
+        {"doc_id": doc_id, "user_id": user_id},
+        {"$set": {"topic_id": topic_id, "hashtag": hashtag}}
+    )
+
 async def download_file(doc_id: str, user_id: str):
     doc = await temp_collection.find_one({"doc_id": doc_id, "user_id": user_id}) or \
           await collection.find_one({"doc_id": doc_id, "user_id": user_id})
