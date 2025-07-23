@@ -81,7 +81,16 @@ async def find_user_by_id(user_id: str):
 
 # 사용자 및 연관 데이터 삭제
 async def delete_user_and_related(user_id: str):
-    await chat_collection.delete_many({"user_id": user_id})
+    # 1. 해당 user의 모든 doc_id 리스트 조회
+    doc_cursor = docs_collection.find({"user_id": user_id})
+    docs = await doc_cursor.to_list(length=None)
+    doc_ids = [doc["doc_id"] for doc in docs]
+    
+    # 2. 해당 유저의 문서와 연관된 챗팅 모두 삭제
+    if doc_ids:
+        await chat_collection.delete_many({"doc_id": {"$in": doc_ids}})
+    
+    # 3. 나머지 컬렉션 삭제
     await docs_collection.delete_many({"user_id": user_id})
     await temp_docs_collection.delete_many({"user_id": user_id})
     await categories_collection.delete_many({"user_id": user_id})

@@ -1,3 +1,4 @@
+# services/python-hwpxlib-main/hwpx_loader.py
 import jpype
 import argparse
 import sys
@@ -15,18 +16,17 @@ if __name__ == "__main__":
 
     jpype.startJVM(
         jpype.getDefaultJVMPath(),
-        "-Djava.class.path={classpath}".format(classpath=args.hwpx_jar_path),
+        "-Djava.class.path={}".format(args.hwpx_jar_path),
         convertStrings=True,
     )
 
     HWPXReader_class = jpype.JPackage('kr.dogfoot.hwpxlib.reader')
     TextExtrac_class = jpype.JPackage('kr.dogfoot.hwpxlib.tool.textextractor')
-    HWPXReader_ = HWPXReader_class.HWPXReader
     TextExtractMethod_ = TextExtrac_class.TextExtractMethod
     TextExtractor_ = TextExtrac_class.TextExtractor
-    TextMarks_ = TextExtrac_class.TextMarks   # 추가
+    TextMarks_ = TextExtrac_class.TextMarks
+    HWPXReader_ = HWPXReader_class.HWPXReader
 
-    # Java의 java.io.File 클래스를 import
     javaio = jpype.JPackage('java').io
     file_obj = javaio.File(args.file_path)
     parser_obj = HWPXReader_.fromFile(file_obj)
@@ -45,7 +45,7 @@ if __name__ == "__main__":
             TextMarks_()
         )
         if hwpxText.strip():
-            best_result = hwpxText
+            best_result = hwpxText.replace(". ", ".\n").replace("? ", "?\n").replace("! ", "!\n")
             break
 
     jpype.shutdownJVM()

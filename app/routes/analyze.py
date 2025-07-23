@@ -1,8 +1,8 @@
-# app/routes/analyze.py
-
+# ✅ app/routes/analyze.py
 from fastapi import APIRouter, Body
-from app.services.analyze_service import analyze_document
-from app.models.analyze_model import DocumentAnalysisResponse
+from app.services.analyze_service import smart_sentence_split, analyze_document 
+from app.services.exaone_client import run_exaone_batch
+from app.models.analyze_model import SentenceAnalysis, DocumentAnalysisResponse
 
 router = APIRouter(prefix="/analyze", tags=["문서AI분석"])
 

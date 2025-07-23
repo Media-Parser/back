@@ -21,7 +21,7 @@ def extract_text_from_hwp(file_bytes: bytes) -> str:
 
     try:
         result = subprocess.run(
-            ["python", LOADER_PATH, "--hwp_jar_path", JAR_PATH, "--file_path", tmp_path, "--output", out_path],
+            ["python3", LOADER_PATH, "--hwp_jar_path", JAR_PATH, "--file_path", tmp_path, "--output", out_path],
             capture_output=True
         )
         if result.returncode != 0:
