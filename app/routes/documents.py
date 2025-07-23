@@ -3,7 +3,7 @@ from app.services.hwpx_extractor import extract_text_from_hwpx
 from app.services.hwp_extractor import extract_text_from_hwp
 from app.services.document_service import (
     upload_file, get_next_doc_id, get_documents, download_file, delete_file,
-    update_document_title, has_temp_doc, get_temp_doc, get_doc, update_temp_doc, finalize_temp_doc,delete_temp_doc
+    update_document_title, update_document_topic, has_temp_doc, get_temp_doc, get_doc, update_temp_doc, finalize_temp_doc,delete_temp_doc
 )
 from app.services.doc_topic import get_topic_info_with_docs
 from app.models.document_model import Doc
@@ -146,12 +146,25 @@ async def get_doc_route(doc_id: str, current_user_id: str = Depends(get_current_
             except Exception:
                 contents = ""
     doc["contents"] = contents
-    # [수정] file_blob 필드를 응답에서 제외
     doc.pop("file_blob", None)
-    print(contents)
-    topic_id, hashtag = get_topic_info_with_docs(contents)
-    print(topic_id)
-    return {**doc, "topic_id": topic_id, "hashtag":hashtag}
+
+    # ✅ topic_id가 없을 경우만 분석 및 저장
+    if not doc.get("topic_id"):
+        topic_id, hashtag = get_topic_info_with_docs(contents)
+        doc["topic_id"] = topic_id
+        doc["hashtag"] = hashtag
+
+        await update_document_topic(
+            doc_id=doc_id,
+            user_id=current_user_id,
+            topic_id=topic_id,
+            hashtag=hashtag
+        )
+    else:
+        topic_id = doc["topic_id"]
+        hashtag = doc.get("hashtag", [])
+
+    return {**doc, "topic_id": topic_id, "hashtag": hashtag}
 
 @router.patch("/temp/{doc_id}")
 async def patch_temp_doc_route(doc_id: str, update_data: dict = Body(...), current_user_id: str = Depends(get_current_user)):
