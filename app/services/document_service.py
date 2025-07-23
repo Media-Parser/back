@@ -10,7 +10,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from app.models.document_model import Doc
 from app.services.hwp_extractor import extract_text_from_hwp
 from app.services.hwpx_extractor import extract_text_from_hwpx
-
+from app.services.doc_topic import embed_openai
 # ====== 설정 ======
 ATLAS_URI = os.getenv("ATLAS_URI")
 client = AsyncIOMotorClient(ATLAS_URI)
@@ -76,6 +76,12 @@ async def update_document_title(doc_id: str, user_id: str, new_title: str) -> bo
         {"$set": {"title": new_title, "updated_dt": datetime.now(tz=tz_kst)}}
     )
     return result.modified_count > 0
+
+async def update_document_topic(doc_id: str, user_id: str, topic_id: int, hashtag: list) -> None:
+    await collection.update_one(
+        {"doc_id": doc_id, "user_id": user_id},
+        {"$set": {"topic_id": topic_id, "hashtag": hashtag}}
+    )
 
 async def download_file(doc_id: str, user_id: str):
     doc = await temp_collection.find_one({"doc_id": doc_id, "user_id": user_id}) or \

@@ -16,10 +16,15 @@ grade_and_filter_node = grade_module.grade_and_filter_node
 standard_module = importlib.import_module('.03_retrieval.standard_retrieval_node', package=__name__)
 standard_retrieval_node = standard_module.standard_retrieval_node
 
-# Generate
-generate_module = importlib.import_module('.05_generate.generate_node', package=__name__)
-# 해당 모듈에서 'generate_node' 함수를 가져옵니다.
-generate_response_node = generate_module.generate_response_node
+
+# 모듈 경로 지정 (상대경로로 03_context 폴더 내부의 chat_history_node.py)
+context_module = importlib.import_module('03_context.chat_history_node')
+
+# 노드 함수 불러오기
+load_context_node = getattr(context_module, 'load_context_node')
+#save_context_node = getattr(context_module, 'save_context_node')
+#load_chathistory_node = getattr(context_module, 'load_chathistory_node')
+save_chathistory_node = getattr(context_module, 'save_chathistory_node')
 
 # --- Title Generation Node 임포트 ---
 # '.05_generate.title_generator_node' 모듈을 동적으로 불러옵니다.
@@ -27,9 +32,8 @@ title_generator_module = importlib.import_module('.05_generate.generate_title_no
 # 해당 모듈에서 'generate_titles' 함수를 가져옵니다.
 generate_titles_node = title_generator_module.generate_titles_node
 
-suggestion_generater_module = importlib.import_module('.05_generate.generate_suggestion_node', package=__name__)
-generate_suggestion_node = suggestion_generater_module.generation_suggestion_node  # 이름을 맞춰줌
-
+main_generater_module = importlib.import_module('.05_generate.generate_main_node', package=__name__)
+generate_main_node = main_generater_module.generate_main_node  # 이름을 맞춰줌
 __all__ = [
     'GraphState',
     'plan_retrieval_node',
@@ -37,6 +41,10 @@ __all__ = [
     'grade_and_filter_node',
     'standard_retrieval_node',
     'create_prompt_messages',
-    'generate_suggestion_node',
     'generate_titles_node',
+    'generate_main_node',
+    'save_chathistory_node',
+    #'load_chathistory_node',
+    'load_context_node',
+    #'save_context_node'
 ]
