@@ -1,4 +1,4 @@
-# 파일: services/node/context/summary_memory_node.py
+# 파일: services/node/context/chat_history_node.py
 
 from typing import Dict, Any, Optional
 from langchain_openai import ChatOpenAI
