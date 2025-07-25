@@ -1,0 +1,7 @@
+# --- LangChain & LangGraph ---
+langchain
+langgraph
+
+# --- OpenAI ---
+openai
+langchain-openai

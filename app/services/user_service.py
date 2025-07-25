@@ -1,44 +1,53 @@
 # app/services/user_service.py
-from app.models.user_model import UserInDB
-from motor.motor_asyncio import AsyncIOMotorClient
-from datetime import datetime
+
 import os
 import re
+from datetime import datetime, timedelta, timezone
 
+from motor.motor_asyncio import AsyncIOMotorClient
+from app.models.user_model import UserInDB
+
+# ===== 설정 =====
 ATLAS_URI = os.getenv("ATLAS_URI")
 client = AsyncIOMotorClient(ATLAS_URI)
-
 db = client['uploadedbyusers']
-collection = db['users']
 
+collection = db['users']
 docs_collection = db['docs']
 temp_docs_collection = db['temp_docs']
 categories_collection = db['categories']
+chat_collection = db['chat_qas']
+
+tz_kst = timezone(timedelta(hours=9))
+
+
+# ===== 공통 유틸 =====
+
+def build_next_user_id(current_id: str = None) -> str:
+    if current_id:
+        match = re.search(r"user_(\d{8})", current_id)
+        next_number = int(match.group(1)) + 1 if match else 1
+    else:
+        next_number = 1
+    return f"user_{next_number:08d}"
+
+
+# ===== 사용자 관련 기능 =====
 
 # 사용자 ID 생성
 async def get_next_user_id():
-    # user_id 필드가 있는 가장 마지막 사용자 찾기
     latest_user = await collection.find_one(
-        {"user_id": {"$regex": "^user_\\d{8}$"}},  # user_00000001 형식
+        {"user_id": {"$regex": "^user_\\d{8}$"}},
         sort=[("user_id", -1)]
     )
+    current_id = latest_user["user_id"] if latest_user else None
+    return build_next_user_id(current_id)
 
-    if latest_user and "user_id" in latest_user:
-        match = re.search(r"user_(\d{8})", latest_user["user_id"])
-        if match:
-            next_number = int(match.group(1)) + 1
-        else:
-            next_number = 1
-    else:
-        # 컬렉션이 비어있거나 user_id가 없는 경우
-        next_number = 1
-
-    return f"user_{next_number:08d}"
-
-# 사용자 생성
-async def find_or_create_user(user_name, user_email, provider):
+# 사용자 생성 또는 조회
+async def find_or_create_user(user_name: str, user_email: str, provider: str):
     user = await collection.find_one({"user_email": user_email, "provider": provider})
     if user:
+        user.pop("_id", None)
         return UserInDB(**user)
 
     new_user_id = await get_next_user_id()
@@ -48,20 +57,21 @@ async def find_or_create_user(user_name, user_email, provider):
         "user_name": user_name,
         "user_email": user_email,
         "provider": provider,
-        "create_dt": datetime.now()
+        "create_dt": datetime.now(tz=tz_kst),
     }
 
-    result = await collection.insert_one(doc)
+    await collection.insert_one(doc)
     return UserInDB(**doc)
 
-# 사용자 조회
-async def find_user_by_email_provider(user_email, provider):
+# 이메일 + provider 기준 사용자 조회
+async def find_user_by_email_provider(user_email: str, provider: str):
     user = await collection.find_one({"user_email": user_email, "provider": provider})
     if user:
+        user.pop("_id", None)
         return UserInDB(**user)
     return None
 
-# 사용자 조회
+# ID 기준 사용자 조회
 async def find_user_by_id(user_id: str):
     user = await collection.find_one({"user_id": user_id})
     if user:
@@ -69,14 +79,20 @@ async def find_user_by_id(user_id: str):
         return UserInDB(**user)
     return None
 
-# 사용자 및 관련 데이터 삭제
+# 사용자 및 연관 데이터 삭제
 async def delete_user_and_related(user_id: str):
-    # 1. docs 삭제
+    # 1. 해당 user의 모든 doc_id 리스트 조회
+    doc_cursor = docs_collection.find({"user_id": user_id})
+    docs = await doc_cursor.to_list(length=None)
+    doc_ids = [doc["doc_id"] for doc in docs]
+    
+    # 2. 해당 유저의 문서와 연관된 챗팅 모두 삭제
+    if doc_ids:
+        await chat_collection.delete_many({"doc_id": {"$in": doc_ids}})
+    
+    # 3. 나머지 컬렉션 삭제
     await docs_collection.delete_many({"user_id": user_id})
-    # 2. temp_docs 삭제
     await temp_docs_collection.delete_many({"user_id": user_id})
-    # 3. categories 삭제
     await categories_collection.delete_many({"user_id": user_id})
-    # 4. user 자체 삭제 (users 컬렉션 예시)
-    await db['users'].delete_one({"user_id": user_id})
+    await collection.delete_one({"user_id": user_id})
     return {"message": "사용자 및 관련 데이터 모두 삭제 완료"}

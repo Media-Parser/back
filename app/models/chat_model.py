@@ -12,20 +12,6 @@ class ChatSendRequest(BaseModel):
     start_index: Optional[int] = -1 # 참조할 내용의 위치 (시작)
     end_index: Optional[int] = -1 # 참조할 내용의 위치 (끝)
 
-# AI 서버와 호환되는 요청 모델 (내부 사용)
-class AIRequest(BaseModel):
-    doc_id: str
-    message: str
-    content: Optional[str] = None
-    contain: Optional[bool] = False
-
-# AI 서버와 호환되는 응답 모델 (내부 사용)
-class AIResponse(BaseModel):
-    chatbot_response: str
-    article_content: Optional[str] = None
-    key_points: Optional[List[str]] = None
-    timestamp: str = Field(default_factory=lambda: datetime.now().isoformat() + "Z")
-
 # 질문-답변 pair
 # 질문-답변 한 사이클 돌았을 때 생성 및 저장
 class ChatQA(BaseModel):
@@ -35,7 +21,8 @@ class ChatQA(BaseModel):
     selection: Optional[str] = None
     answer: str
     suggestion: Optional[str] = None
-    apply_value: Optional[str] = None
+    apply_title: Optional[str] = None
+    apply_body: Optional[str] = None 
     type: Optional[str] = None
     created_dt: datetime
 

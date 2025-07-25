@@ -17,7 +17,7 @@ class Settings:
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
     # CORS
-    CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",") if o.strip()]
+    CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://52.15.42.56:5173").split(",") if o.strip()]
     CORS_ALLOW_CREDENTIALS = os.getenv("CORS_ALLOW_CREDENTIALS", "true").lower() == "true"
     CORS_ALLOW_METHODS = allow_all_if_asterisk([m.strip() for m in os.getenv("CORS_ALLOW_METHODS", "*").split(",") if m.strip()])
     CORS_ALLOW_HEADERS = allow_all_if_asterisk([h.strip() for h in os.getenv("CORS_ALLOW_HEADERS", "*").split(",") if h.strip()])
