@@ -46,10 +46,10 @@ def standard_retrieval_node(state: GraphState) -> GraphState:
     if end_date_int is not None:
         filter_conditions.append({'date_int': {'$lte': end_date_int}})
 
-    # 2. 토픽 필터링 (예정)
-    # topic_filter = filters.get("topic")
-    # if topic_filter:
-    #     filter_conditions.append({'topic': {'$eq': topic_filter}})
+    # 2. 토픽 필터링
+    topic_filter = filters.get("topic_id")
+    if topic_filter:
+        filter_conditions.append({'topic_id': {'$eq': topic_filter}})
 
     # 3. 최종 검색 필터 조합
     if len(filter_conditions) > 1:

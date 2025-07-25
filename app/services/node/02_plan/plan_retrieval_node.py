@@ -134,4 +134,6 @@ def plan_retrieval_node(state: GraphState) -> GraphState:
     })
 
     plan_dict = plan_objects[0].model_dump()
+    if state.get("use_full_document", False):
+        plan_dict["apply_body_required"] = False    
     return {**state, "plan": plan_dict}

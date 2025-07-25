@@ -36,13 +36,19 @@ async def retrieve_document_node(state: GraphState) -> dict:
 
     async def fetch(coll):
         return await db[coll].find_one({"doc_id": doc_id})
-
+    
     temp_doc, main_doc = await asyncio.gather(fetch("temp_docs"), fetch("docs"))
     doc = temp_doc or main_doc
 
     if not doc:
         return {**state}
 
+    topic_id = doc.get("topic_id")
+    if not isinstance(topic_id, int):
+        topic_id = -1
+
+    if "plan" in state and "filters" in state["plan"]:
+        state["plan"]["filters"]["topic_id"] = topic_id
     return {**state, "selected_text": doc.get("contents", "")}
 
 async def no_generate_node(state: GraphState) -> dict:
