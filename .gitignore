@@ -197,3 +197,4 @@ cython_debug/
 .cursorindexingignore
 chroma_db*/
 my_bertopic_*
+nohup.out

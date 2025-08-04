@@ -14929,3 +14929,600 @@ WARNING:  Invalid HTTP request received.
 WARNING:  Invalid HTTP request received.
 INFO:     147.182.145.197:59396 - "GET / HTTP/1.1" 404 Not Found
 INFO:     147.182.145.197:59398 - "GET /login HTTP/1.1" 404 Not Found
+INFO:     219.255.64.196:59276 - "GET /auth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     3.132.23.201:48940 - "GET / HTTP/1.1" 404 Not Found
+INFO:     3.132.23.201:38552 - "GET / HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     165.154.208.232:59560 - "GET / HTTP/1.1" 404 Not Found
+INFO:     205.210.31.94:64706 - "GET / HTTP/1.1" 404 Not Found
+INFO:     162.142.125.213:47720 - "GET / HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+INFO:     162.142.125.213:47224 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     162.142.125.213:55298 - "GET /security.txt HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     71.6.134.232:59268 - "GET / HTTP/1.1" 404 Not Found
+INFO:     71.6.134.232:40974 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     159.223.67.231:45320 - "GET / HTTP/1.1" 404 Not Found
+INFO:     159.223.67.231:45334 - "GET /login HTTP/1.1" 404 Not Found
+INFO:     198.235.24.177:57468 - "GET / HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+INFO:     35.226.27.221:55712 - "GET / HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+INFO:     196.251.86.124:60654 - "GET / HTTP/1.1" 404 Not Found
+INFO:     3.130.96.91:58776 - "GET / HTTP/1.1" 404 Not Found
+INFO:     3.130.96.91:46684 - "GET / HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+INFO:     35.95.63.38:50220 - "GET / HTTP/1.1" 404 Not Found
+INFO:     3.134.148.59:49850 - "GET / HTTP/1.1" 404 Not Found
+INFO:     3.134.148.59:37674 - "GET / HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     64.62.197.47:4282 - "GET / HTTP/1.1" 404 Not Found
+INFO:     64.62.197.57:13671 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     64.62.197.58:49745 - "GET /?format=json HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+INFO:     162.142.125.120:43040 - "GET / HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+INFO:     162.142.125.120:46222 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     162.142.125.120:54014 - "GET /sitemap.xml HTTP/1.1" 404 Not Found
+INFO:     106.75.87.156:33658 - "GET /api/v2/heartbeat HTTP/1.1" 404 Not Found
+INFO:     106.75.87.156:34040 - "GET / HTTP/1.1" 404 Not Found
+INFO:     106.75.130.248:26298 - "GET / HTTP/1.1" 404 Not Found
+INFO:     106.75.130.248:26330 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     165.232.179.108:40408 - "GET / HTTP/1.1" 404 Not Found
+INFO:     165.232.179.108:40424 - "GET /login HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     172.202.117.124:53892 - "GET / HTTP/1.1" 404 Not Found
+INFO:     65.49.20.68:32806 - "GET / HTTP/1.1" 404 Not Found
+INFO:     65.49.20.72:64093 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     65.49.20.120:28377 - "GET /?format=json HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+INFO:     3.132.23.201:33894 - "GET / HTTP/1.1" 404 Not Found
+INFO:     3.132.23.201:33896 - "GET / HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     167.94.138.196:48766 - "GET / HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+INFO:     167.94.138.196:52112 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     167.94.138.196:48534 - "GET /wiki HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     64.226.94.131:59548 - "GET / HTTP/1.1" 404 Not Found
+INFO:     64.226.94.131:59558 - "GET /login HTTP/1.1" 404 Not Found
+INFO:     64.23.226.35:40572 - "GET / HTTP/1.1" 404 Not Found
+INFO:     64.23.226.35:40586 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     Started server process [5046]
+INFO:     Waiting for application startup.
+[CRITICAL] 애플리케이션 시작 실패: 분류 모델 로드 실패: [Errno 2] No such file or directory: '/home/ubuntu/ai/finetuned_exaone_v6/id2label.json'
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+📡 현재 디바이스: cuda
+[INFO] FastAPI 애플리케이션 시작: 의존성 로딩...
+[INFO] EXAONE 클라이언트 의존성 로딩 시작...
+[DEBUG] prompt_parser: '/home/ubuntu/finetune/prompt_definitions/classification_prompt.txt' 파일에서 라벨 파싱 시작.
+[DEBUG] prompt_parser: 파일 내용 로드 성공. 길이: 1070 문자.
+[DEBUG] prompt_parser: '[분류 기준]' 섹션 추출 성공. 내용:
+---
+문제 없음: 부정적 표현이나 논란 소지가 없는 중립적 표현.
+프레이밍: 상대 진영의 의도를 의심하게 만들기 위한 정치적 함의가 담긴 표현.
+감정적 비난: 작성자의 감정이 강하게 드러나는 공격적 표현.
+부정적 표현: 감정 없이 특정 단어나 표현 자체가 부정적 뉘앙스를 내포한 경우.
+부정적 비유: 부정적 대상을 비유나 은유를 통해 부정적 이미지와 연결한 표현.
+조롱/비아냥/풍자: 상대를 조롱하거나 비웃는 투의 비꼬는 표현.
+인신공격: 개인의 인격이나 정체성을 직접적으로 비하하거나 공격한 표현.
+일반화: 일부의 생각이나 행동을 전체에게 지나치게 확대 적용한 표현.
+단정/확증편향: 근거가 부족하거나 주관적 추측을 마치 확실한 사실처럼 단정지은 표현.
+사실 여부 불명확: 객관적인 근거 없이 진위가 확실하지 않은 사실을 제시한 표현.
+책임 전가: 복잡한 문제를 단순히 특정 대상이나 상대 진영 탓으로 돌린 표현.
+극단적 묘사: 상황을 과장되게 표현하여 불안감이나 공포감을 유발하는 표현.
+---
+[DEBUG] prompt_parser: 라벨 파싱 성공: 이름='문제 없음', 설명='부정적 표현이나 논란 소지가 없는 중립적 표현.'
+[DEBUG] prompt_parser: 라벨 파싱 성공: 이름='프레이밍', 설명='상대 진영의 의도를 의심하게 만들기 위한 정치적 함의가 담긴 표현.'
+[DEBUG] prompt_parser: 라벨 파싱 성공: 이름='감정적 비난', 설명='작성자의 감정이 강하게 드러나는 공격적 표현.'
+[DEBUG] prompt_parser: 라벨 파싱 성공: 이름='부정적 표현', 설명='감정 없이 특정 단어나 표현 자체가 부정적 뉘앙스를 내포한 경우.'
+[DEBUG] prompt_parser: 라벨 파싱 성공: 이름='부정적 비유', 설명='부정적 대상을 비유나 은유를 통해 부정적 이미지와 연결한 표현.'
+[DEBUG] prompt_parser: 라벨 파싱 성공: 이름='조롱/비아냥/풍자', 설명='상대를 조롱하거나 비웃는 투의 비꼬는 표현.'
+[DEBUG] prompt_parser: 라벨 파싱 성공: 이름='인신공격', 설명='개인의 인격이나 정체성을 직접적으로 비하하거나 공격한 표현.'
+[DEBUG] prompt_parser: 라벨 파싱 성공: 이름='일반화', 설명='일부의 생각이나 행동을 전체에게 지나치게 확대 적용한 표현.'
+[DEBUG] prompt_parser: 라벨 파싱 성공: 이름='단정/확증편향', 설명='근거가 부족하거나 주관적 추측을 마치 확실한 사실처럼 단정지은 표현.'
+[DEBUG] prompt_parser: 라벨 파싱 성공: 이름='사실 여부 불명확', 설명='객관적인 근거 없이 진위가 확실하지 않은 사실을 제시한 표현.'
+[DEBUG] prompt_parser: 라벨 파싱 성공: 이름='책임 전가', 설명='복잡한 문제를 단순히 특정 대상이나 상대 진영 탓으로 돌린 표현.'
+[DEBUG] prompt_parser: 라벨 파싱 성공: 이름='극단적 묘사', 설명='상황을 과장되게 표현하여 불안감이나 공포감을 유발하는 표현.'
+[DEBUG] prompt_parser: 파싱 완료. 로드된 라벨 수: 12
+[INFO] 라벨 설명 로드 완료.
+[INFO] 로드된 라벨 설명 키: dict_keys(['문제 없음', '프레이밍', '감정적 비난', '부정적 표현', '부정적 비유', '조롱/비아냥/풍자', '인신공격', '일반화', '단정/확증편향', '사실 여부 불명확', '책임 전가', '극단적 묘사'])
+[INFO] 비속어 사전 로드 완료.
+[INFO] 로드된 비속어 수: 4525
+[INFO] 분류 모델 로드 중: /home/ubuntu/ai/finetuned_exaone_v6...
+[ERROR] 파인튜닝된 분류 모델 로드 실패: [Errno 2] No such file or directory: '/home/ubuntu/ai/finetuned_exaone_v6/id2label.json'
+INFO:     182.228.118.35:58385 - "GET /auth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     182.228.118.35:58386 - "GET /auth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     182.228.118.35:58428 - "GET /auth/kakao/callback?code=0-C8w7RSg0fGMYxQ7vp2lbFnhcAEAWUo6hL1PCLWOEns9JpJuwWbUgAAAAQKFyEtAAABmFBGp-1PBWDH3LuH7A HTTP/1.1" 307 Temporary Redirect
+INFO:     182.228.118.35:58436 - "OPTIONS /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58438 - "OPTIONS /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58437 - "OPTIONS /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58428 - "GET /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58428 - "GET /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58438 - "OPTIONS /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58436 - "OPTIONS /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58437 - "OPTIONS /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58428 - "GET /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58439 - "OPTIONS /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58441 - "OPTIONS /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58436 - "OPTIONS /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58442 - "GET /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58442 - "GET /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58443 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58443 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58428 - "GET /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58443 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58428 - "GET /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58443 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58428 - "GET /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     182.228.118.35:58428 - "GET /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     65.49.1.38:22894 - "GET / HTTP/1.1" 404 Not Found
+INFO:     65.49.1.49:52775 - "GET /?format=json HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+INFO:     182.228.118.35:59088 - "OPTIONS /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     58.93.84.171:62852 - "GET / HTTP/1.0" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     162.142.125.216:34872 - "GET / HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+INFO:     162.142.125.216:34888 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     162.142.125.216:53460 - "GET /robots.txt HTTP/1.1" 404 Not Found
+INFO:     206.168.34.42:57564 - "GET / HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+INFO:     206.168.34.42:51438 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     206.168.34.42:51514 - "GET /login HTTP/1.1" 404 Not Found
+INFO:     205.210.31.155:64836 - "GET / HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     159.89.164.131:59908 - "GET / HTTP/1.1" 404 Not Found
+INFO:     159.89.164.131:59914 - "GET /login HTTP/1.1" 404 Not Found
+INFO:     18.97.19.222:33632 - "GET / HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+INFO:     195.184.76.110:33921 - "GET / HTTP/1.1" 404 Not Found
+INFO:     195.184.76.7:50669 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     91.196.152.102:41765 - "GET / HTTP/1.1" 404 Not Found
+INFO:     91.231.89.209:54269 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     198.235.24.146:62248 - "GET / HTTP/1.1" 404 Not Found
+INFO:     118.222.132.197:53259 - "GET / HTTP/1.1" 404 Not Found
+INFO:     118.222.132.197:53259 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     118.222.132.197:53259 - "GET /%EC%95%B7%E3%84%B4 HTTP/1.1" 404 Not Found
+INFO:     118.222.132.197:53260 - "GET /docs HTTP/1.1" 200 OK
+INFO:     118.222.132.197:53260 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     118.222.132.197:5507 - "GET /docs HTTP/1.1" 200 OK
+INFO:     118.222.132.197:5507 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     118.222.132.197:5637 - "GET /auth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:5638 - "GET /auth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:5638 - "GET /auth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:5638 - "GET /auth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:5650 - "GET /auth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:5699 - "GET /auth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:5705 - "GET /auth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:5713 - "GET /auth/kakao/callback?code=gnb7V14ooowV7MpsbJggQTfOYG2doHt-KIrLycmIvPJfkRxh4bwnaQAAAAQKFxZiAAABmFR6Zt-2xj-RG-1vuA HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:53367 - "GET / HTTP/1.1" 404 Not Found
+INFO:     118.222.132.197:53422 - "GET /docs HTTP/1.1" 200 OK
+INFO:     118.222.132.197:53422 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     118.222.132.197:53506 - "GET /docs HTTP/1.1" 200 OK
+INFO:     118.222.132.197:53506 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     118.222.132.197:53568 - "GET /docs HTTP/1.1" 200 OK
+INFO:     118.222.132.197:53568 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     118.222.132.197:6807 - "GET /auth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:6807 - "GET /auth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:6807 - "GET /auth/kakao/callback?code=95-7H7vuvlW-nILM_P0HaXwdw5pSFufTX-EStdVQea947e0n6qUSNAAAAAQKDQ0hAAABmFSXt_62W8wW6V7rJg HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:6808 - "GET /auth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:9690 - "GET /auth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:9691 - "GET /auth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     49.142.34.150:62339 - "GET /auth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     49.142.34.150:62339 - "GET /auth/naver/callback?code=Dqjq4AslW5yoiCkKDw&state=RANDOM_STATE_STRING HTTP/1.1" 307 Temporary Redirect
+INFO:     49.142.34.150:62370 - "OPTIONS /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62371 - "OPTIONS /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62372 - "OPTIONS /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62339 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62340 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62371 - "OPTIONS /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62370 - "OPTIONS /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62372 - "OPTIONS /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62339 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62377 - "OPTIONS /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62375 - "OPTIONS /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62370 - "OPTIONS /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62339 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62378 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62379 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62339 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62340 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62339 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62340 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62379 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62339 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62340 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62376 - "OPTIONS /documents/temp/exists/doc_00000048 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62339 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62391 - "OPTIONS /documents/temp/exists/doc_00000048 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62376 - "OPTIONS /chat/history/doc_00000048 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62390 - "OPTIONS /documents/temp/exists/doc_00000048 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62394 - "OPTIONS /chat/history/doc_00000048 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62393 - "OPTIONS /documents/temp/exists/doc_00000048 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62397 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62340 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62379 - "GET /documents/temp/exists/doc_00000048 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62393 - "OPTIONS /documents/doc_00000048 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62397 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62340 - "GET /documents/temp/exists/doc_00000048 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62340 - "GET /documents/temp/exists/doc_00000048 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62339 - "GET /chat/history/doc_00000048 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62379 - "GET /documents/doc_00000048 HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/applications.py", line 112, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/fastapi/routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/home/ubuntu/ssami/ssami-back/app/routes/documents.py", line 153, in get_doc_route
+    topic_id, hashtag = get_topic_info_with_docs(contents)
+  File "/home/ubuntu/ssami/ssami-back/app/services/doc_topic.py", line 36, in get_topic_info_with_docs
+    raise ValueError(f"입력 문서가 비어있거나 문자열이 아닙니다: {doc} (type={type(doc)})")
+ValueError: 입력 문서가 비어있거나 문자열이 아닙니다:  (type=<class 'str'>)
+INFO:     49.142.34.150:62397 - "GET /documents/temp/exists/doc_00000048 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62340 - "GET /chat/history/doc_00000048 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62339 - "GET /documents/doc_00000048 HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/applications.py", line 112, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/fastapi/routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/home/ubuntu/ssami/ssami-back/app/routes/documents.py", line 153, in get_doc_route
+    topic_id, hashtag = get_topic_info_with_docs(contents)
+  File "/home/ubuntu/ssami/ssami-back/app/services/doc_topic.py", line 36, in get_topic_info_with_docs
+    raise ValueError(f"입력 문서가 비어있거나 문자열이 아닙니다: {doc} (type={type(doc)})")
+ValueError: 입력 문서가 비어있거나 문자열이 아닙니다:  (type=<class 'str'>)
+INFO:     49.142.34.150:62340 - "GET /documents/doc_00000048 HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/applications.py", line 112, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/fastapi/routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/home/ubuntu/ssami/ssami-back/app/routes/documents.py", line 153, in get_doc_route
+    topic_id, hashtag = get_topic_info_with_docs(contents)
+  File "/home/ubuntu/ssami/ssami-back/app/services/doc_topic.py", line 36, in get_topic_info_with_docs
+    raise ValueError(f"입력 문서가 비어있거나 문자열이 아닙니다: {doc} (type={type(doc)})")
+ValueError: 입력 문서가 비어있거나 문자열이 아닙니다:  (type=<class 'str'>)
+INFO:     49.142.34.150:62397 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62403 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62400 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62397 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62403 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62406 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62400 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62403 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62397 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62406 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62643 - "GET /auth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     49.142.34.150:62644 - "GET /auth/naver/callback?code=Qvq5ekPdnT22jp6wOI&state=RANDOM_STATE_STRING HTTP/1.1" 307 Temporary Redirect
+INFO:     49.142.34.150:62766 - "OPTIONS /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62764 - "OPTIONS /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62765 - "OPTIONS /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62644 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62766 - "OPTIONS /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62764 - "OPTIONS /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62765 - "OPTIONS /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62747 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62766 - "OPTIONS /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62771 - "OPTIONS /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62764 - "OPTIONS /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62747 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62772 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62773 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62747 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62773 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62644 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62644 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62747 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62773 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62747 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:62773 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63009 - "OPTIONS /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63010 - "OPTIONS /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63012 - "OPTIONS /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63011 - "OPTIONS /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63016 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63018 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63016 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63019 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63016 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63017 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63020 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63015 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63018 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63018 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63015 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63020 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63018 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63081 - "GET /auth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     49.142.34.150:63521 - "GET /auth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     49.142.34.150:63521 - "GET /auth/naver/callback?code=AqkTDkLiQ1ncOZl79c&state=RANDOM_STATE_STRING HTTP/1.1" 307 Temporary Redirect
+INFO:     49.142.34.150:63521 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63522 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63521 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63522 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63521 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63522 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63557 - "GET /users/user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63554 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63557 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63554 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63521 - "GET /categories/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63522 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     49.142.34.150:63521 - "GET /documents/?user_id=user_00000006 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:11241 - "GET /auth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:11242 - "GET /auth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     223.38.52.218:64540 - "GET /auth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:12480 - "GET /auth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:12481 - "GET /auth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:13132 - "GET /docs HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13132 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13131 - "GET /auth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:13131 - "GET /auth/kakao/callback?code=dd7BsUdINjwaCcJ-aDM_W-qrUcqh6XKoIeiEEpzlqq3B62N2URahIgAAAAQKFxKWAAABmFUg4c6t1856Xp2T3g HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:13201 - "OPTIONS /users/user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13200 - "OPTIONS /users/user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13199 - "OPTIONS /users/user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13131 - "GET /users/user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13200 - "OPTIONS /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13201 - "OPTIONS /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13199 - "OPTIONS /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13131 - "GET /users/user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13204 - "OPTIONS /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13205 - "OPTIONS /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13206 - "OPTIONS /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13187 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13131 - "GET /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13207 - "GET /users/user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13187 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13131 - "GET /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13207 - "GET /users/user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13187 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13207 - "GET /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13131 - "GET /users/user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13187 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13207 - "GET /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13214 - "OPTIONS /trash?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13215 - "OPTIONS /trash?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13208 - "GET /trash?user_id=user_00000012 HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:13215 - "OPTIONS /trash/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13208 - "GET /trash?user_id=user_00000012 HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:13208 - "GET /trash/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13208 - "GET /trash/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13216 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13216 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13208 - "GET /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13216 - "GET /users/user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13217 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13208 - "GET /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13216 - "GET /users/user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13217 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13208 - "GET /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13217 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13208 - "GET /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13217 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13217 - "GET /auth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:13218 - "GET /auth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:13243 - "GET /auth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:13243 - "GET /auth/kakao/callback?code=lh5_I6FRW6LZ60eY2xfeHv17kDa-dZrjRW6OXIAOpBQK0SyJ3gbR2wAAAAQKFxAvAAABmFUhjmKUJG13ldIf8A HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:13243 - "GET /users/user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13243 - "GET /users/user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13243 - "GET /users/user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13258 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13265 - "GET /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13243 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13258 - "GET /users/user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13265 - "GET /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13243 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13258 - "GET /users/user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13265 - "GET /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13243 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13265 - "GET /documents/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     205.210.31.21:61514 - "GET / HTTP/1.1" 404 Not Found
+INFO:     219.255.64.196:64616 - "GET /auth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     219.255.64.196:64629 - "GET /auth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     219.255.64.196:64641 - "GET /auth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     219.255.64.196:64653 - "GET /auth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     219.255.64.196:64658 - "GET /auth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     219.255.64.196:64671 - "GET /auth/kakao/callback?code=1XRJ7FJJ0_Bt0TLZJNZO3GNZD17o_g7t1_64xKyhPG-ZOr3Ic8SaUgAAAAQKDQxeAAABmFUmoVAp9hBbJybEWQ HTTP/1.1" 307 Temporary Redirect
+INFO:     219.255.64.196:64679 - "OPTIONS /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64680 - "OPTIONS /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64681 - "OPTIONS /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64671 - "GET /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64671 - "GET /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64679 - "OPTIONS /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64681 - "OPTIONS /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64680 - "OPTIONS /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64671 - "GET /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64679 - "OPTIONS /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64683 - "OPTIONS /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64680 - "OPTIONS /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64685 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64686 - "GET /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64685 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64686 - "GET /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64671 - "GET /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64671 - "GET /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64686 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64671 - "GET /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64686 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64671 - "GET /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64698 - "OPTIONS /documents/temp/exists/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64697 - "OPTIONS /documents/temp/exists/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64696 - "OPTIONS /chat/history/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64695 - "OPTIONS /documents/temp/exists/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64699 - "OPTIONS /documents/temp/exists/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64700 - "OPTIONS /chat/history/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64693 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64701 - "GET /documents/temp/exists/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64702 - "GET /chat/history/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64693 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64694 - "GET /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64700 - "OPTIONS /documents/temp/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64701 - "GET /documents/temp/exists/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64702 - "GET /chat/history/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64693 - "GET /documents/temp/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64694 - "GET /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64701 - "GET /documents/temp/exists/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64701 - "GET /documents/temp/exists/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64694 - "GET /documents/temp/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64703 - "GET /documents/temp/doc_00000082 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64708 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64709 - "GET /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64708 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64709 - "GET /users/user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64710 - "GET /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64710 - "GET /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64709 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64710 - "GET /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64709 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64710 - "GET /documents/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64714 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     219.255.64.196:64714 - "GET /categories/?user_id=user_00000010 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13515 - "OPTIONS /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13514 - "OPTIONS /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13516 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:13516 - "GET /categories/?user_id=user_00000012 HTTP/1.1" 200 OK
+INFO:     118.222.132.197:55808 - "GET /auth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     118.222.132.197:14715 - "OPTIONS /users/user_00000012 HTTP/1.1" 200 OK
