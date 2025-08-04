@@ -1,19 +1,35 @@
-# ssami-back/Dockerfile
-# 1. Python 공식 이미지 사용
-FROM python:3.11
+# ssami/ssami-back/Dockerfile
 
-# 2. 작업 디렉터리 생성
+FROM python:3.10
+
+# Java 설치
+RUN apt-get update && \
+    apt-get install -y default-jdk && \
+    apt-get clean
+
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
 WORKDIR /app
 
-# 3. 의존성 복사 및 설치
-COPY requirements.txt ./
+# pip 업그레이드 및 multipart 제거
+RUN pip install --upgrade pip && pip uninstall -y multipart || true
+
+# requirements.txt 복사 및 설치
+COPY ssami/ssami-back/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 4. 소스 전체 복사
-COPY . .
+# 백엔드 코드 복사
+COPY ssami/ssami-back/ ./
 
-# 5. 환경변수 설정 (예시, 필요시)
-# ENV YOUR_ENV_VAR=your_value
+# ✅ 컨테이너 루트 경로에 finetune 복사
+COPY finetune/ /finetune
 
-# 6. FastAPI 실행 (Uvicorn)
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# ✅ 컨테이너 루트 경로에 ai 복사
+COPY ai/ /ai
+
+# entrypoint 복사 및 권한 설정
+COPY ssami/ssami-back/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]

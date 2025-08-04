@@ -57,19 +57,26 @@ def hash_sentence(text):
 
 # 이전 분석 결과 가져오기
 async def get_prev_analysis(doc_id: str) -> List[Dict]:
-    # 1. temp_docs에서 먼저 찾기
+    # 1. analysis_cache 우선
+    cache_doc = await analysis_collection.find_one({"doc_id": doc_id})
+    if cache_doc and "sentence_analysis" in cache_doc:
+        print(f"[LOG] analysis_cache에서 이전 분석 결과 로드됨 (doc_id={doc_id})")
+        return cache_doc["sentence_analysis"]
+
+    # 2. temp_docs
     doc = await db["temp_docs"].find_one({"doc_id": doc_id})
     if doc and "sentence_analysis" in doc:
-        print(f"[LOG] temp_docs에서 이전 분석 결과 로드됨 (doc_id={doc_id})") # ✅ 로그 추가
+        print(f"[LOG] temp_docs에서 이전 분석 결과 로드됨 (doc_id={doc_id})")
         return doc["sentence_analysis"]
-    # 2. 없으면 docs에서 찾기
+
+    # 3. docs
     doc = await db["docs"].find_one({"doc_id": doc_id})
     if doc and "sentence_analysis" in doc:
-        print(f"[LOG] docs에서 이전 분석 결과 로드됨 (doc_id={doc_id})") # ✅ 로그 추가
+        print(f"[LOG] docs에서 이전 분석 결과 로드됨 (doc_id={doc_id})")
         return doc["sentence_analysis"]
-    print(f"[LOG] 이전 분석 결과 캐시를 찾을 수 없음 (doc_id={doc_id})") # ✅ 로그 추가
-    return []
 
+    print(f"[LOG] 이전 분석 결과 캐시를 찾을 수 없음 (doc_id={doc_id})")
+    return []
 # 분석 결과 저장
 async def save_analysis(doc_id: str, analysis: List[SentenceAnalysis]):
     # 실제로는 analysis_cache 컬렉션에 저장 (get_prev_analysis에서 docs, temp_docs 참조)
